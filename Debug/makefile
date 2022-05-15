@@ -12,6 +12,8 @@ GEN_CMDS__FLAG :=
 ORDERED_OBJS += \
 "./main.obj" \
 "./tm4c123gh6pm_startup_ccs.obj" \
+"./Args/ArgumentArray.obj" \
+"./Args/TypeCode.obj" \
 "../tm4c123gh6pm.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibc.a \
@@ -24,7 +26,9 @@ RMDIR := RMDIR /S/Q
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include subdir_vars.mk
+-include Args/subdir_vars.mk
 -include subdir_rules.mk
+-include Args/subdir_rules.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -155,9 +159,9 @@ STIM.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "tm4c123gh6pm_startup_ccs.obj" 
+	-$(RM) "main.obj" "tm4c123gh6pm_startup_ccs.obj" "Args\ArgumentArray.obj" "Args\TypeCode.obj" 
 	-$(RM) "tm4c123gh6pm_startup_ccs.d" 
-	-$(RM) "main.d" 
+	-$(RM) "main.d" "Args\ArgumentArray.d" "Args\TypeCode.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

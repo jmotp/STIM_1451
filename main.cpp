@@ -1,8 +1,8 @@
 #include<cstdint>
 #include<vector>
-#include<String>
-#include"Args/TimeDuration.h"
-#include"Args/TimeInstance"
+#include <String>
+#include "Args/TimeDuration.h"
+#include "Args/TimeInstance.h"
 // ERROR ENCODING
 #define NO_ERROR 0
 #define INVALID_COMMID 1
@@ -38,7 +38,7 @@ namespace IEEE1451Dot0{
        typedef std::vector<uint32_t> UInt32Array;
        typedef std::vector<float> Float32Array;
        typedef std::vector<double> Float64Array;
-       typedef std::vector<String> StringArray;
+       typedef std::vector<string> StringArray;
        typedef std::vector<char> OctetArray;
        typedef std::vector<bool> BooleanArray;
        typedef std::vector<TimeInstance> TimeInstanceArray;

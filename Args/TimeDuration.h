@@ -8,11 +8,12 @@
 #ifndef TIMEDURATION_H_
 #define TIMEDURATION_H_
 
-class TimeDuration : public TimeRepresentation
+#include "TimeRepresentation.h"
+
+
+struct TimeDuration
 {
-public:
-    TimeDuration();
-    virtual ~TimeDuration();
+    TimeRepresentation timeRepresentation;
 };
 
 #endif /* TIMEDURATION_H_ */

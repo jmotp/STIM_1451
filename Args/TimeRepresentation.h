@@ -8,13 +8,10 @@
 #ifndef TIMEREPRESENTATION_H_
 #define TIMEREPRESENTATION_H_
 
-class TimeRepresentation
+struct TimeRepresentation
 {
-public:
     int Secs;
     int nSecs;
-    TimeRepresentation();
-    virtual ~TimeRepresentation();
 };
 
 #endif /* TIMEREPRESENTATION_H_ */

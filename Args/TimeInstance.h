@@ -7,15 +7,13 @@
 
 #ifndef TIMEINSTANCE_H_
 #define TIMEINSTANCE_H_
-
+#include "TimeRepresentation.h"
 #include<cstdint>
 
-class TimeInstance :public TimeRepresentation
+struct TimeInstance
 {
-public:
     uint8_t epoch;
-    TimeInstance();
-    virtual ~TimeInstance();
+    TimeRepresentation timeRepresentation;
 };
 
 #endif /* TIMEINSTANCE_H_ */
