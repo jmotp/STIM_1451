@@ -5,7 +5,9 @@
  *      Author: jmotp
  */
 
-#include <Args/ArgumentArray.h>
+#include "Args/ArgumentArray.h"
+
+
 
 ArgumentArray::ArgumentArray()
 {
@@ -17,4 +19,32 @@ ArgumentArray::~ArgumentArray()
 {
     // TODO Auto-generated destructor stub
 }
+
+uint16_t ArgumentArray::getByName(string name, Argument* argument){
+    return 0;
+};
+
+uint16_t ArgumentArray::getByIndex(uint16_t index, Argument* argument){
+    argument = &get<1>(argumentArray[index]);
+    return 0;
+}
+
+uint16_t ArgumentArray::putByName(string name, Argument value){
+    Argument argument = value;
+
+    argumentArray.push_back(tuple<string,Argument&>(name,value));
+    return 0;
+}
+
+uint16_t ArgumentArray::putByIndex(uint16_t index, Argument value){
+    return 0;
+};
+
+uint16_t ArgumentArray::getNames(string* names){
+    return 0;
+};
+
+uint16_t ArgumentArray::getIndexes(int *indexes){
+    return 0;
+};
 

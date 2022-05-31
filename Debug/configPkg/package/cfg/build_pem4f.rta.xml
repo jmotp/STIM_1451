@@ -1,0 +1,142 @@
+<xdc.runtime.Types.RtaDecoderData>
+  <targetName>ti.targets.arm.elf.M4F</targetName>
+  <binaryParser>ti.targets.omf.elf.Elf32</binaryParser>
+  <endian>little</endian>
+  <bitsPerChar>8</bitsPerChar>
+  <argSize>4</argSize>
+  <eventSize>48</eventSize>
+  <dataTransportClassName>undefined</dataTransportClassName>
+  <controlTransportClassName>undefined</controlTransportClassName>
+  <loggers-length>0</loggers-length>
+  <modMap-length>17</modMap-length>
+  <modMap key="xdc.runtime.Assert">
+    <id>32770</id>
+    <logger>null</logger>
+    <diagsMask>0000100000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.Core">
+    <id>32771</id>
+    <logger>null</logger>
+    <diagsMask>0000100000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.Defaults">
+    <id>32772</id>
+    <logger>null</logger>
+    <diagsMask>0000110000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.Diags">
+    <id>32773</id>
+    <logger>null</logger>
+    <diagsMask>0000100000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.Error">
+    <id>32774</id>
+    <logger>null</logger>
+    <diagsMask>0000110000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.Gate">
+    <id>32775</id>
+    <logger>null</logger>
+    <diagsMask>0000100000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.GateNull">
+    <id>32776</id>
+    <logger>null</logger>
+    <diagsMask>0000100000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.Log">
+    <id>32777</id>
+    <logger>null</logger>
+    <diagsMask>0000100000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.Main">
+    <id>32778</id>
+    <logger>null</logger>
+    <diagsMask>0000110000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.Memory">
+    <id>32779</id>
+    <logger>null</logger>
+    <diagsMask>0000100000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.HeapStd">
+    <id>32780</id>
+    <logger>null</logger>
+    <diagsMask>0000100000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.Registry">
+    <id>32781</id>
+    <logger>null</logger>
+    <diagsMask>0000110000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.Startup">
+    <id>32782</id>
+    <logger>null</logger>
+    <diagsMask>0000100000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.System">
+    <id>32783</id>
+    <logger>null</logger>
+    <diagsMask>0000100000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.SysMin">
+    <id>32784</id>
+    <logger>null</logger>
+    <diagsMask>0000100000000000</diagsMask>
+  </modMap>
+  <modMap key="xdc.runtime.Text">
+    <id>32785</id>
+    <logger>null</logger>
+    <diagsMask>0000100000000000</diagsMask>
+  </modMap>
+  <modMap key="ti.catalog.arm.cortexm4.tiva.ce.Boot">
+    <id>32791</id>
+    <logger>null</logger>
+    <diagsMask>0000110000000000</diagsMask>
+  </modMap>
+  <evtMap-length>11</evtMap-length>
+  <evtMap key="xdc.runtime.Log.L_construct">
+    <id>799</id>
+    <msg>%3C--+construct%3A+%25p%28%27%25s%27%29</msg>
+  </evtMap>
+  <evtMap key="xdc.runtime.Log.L_create">
+    <id>823</id>
+    <msg>%3C--+create%3A+%25p%28%27%25s%27%29</msg>
+  </evtMap>
+  <evtMap key="xdc.runtime.Log.L_destruct">
+    <id>844</id>
+    <msg>--%3E+destruct%3A+%28%25p%29</msg>
+  </evtMap>
+  <evtMap key="xdc.runtime.Log.L_delete">
+    <id>863</id>
+    <msg>--%3E+delete%3A+%28%25p%29</msg>
+  </evtMap>
+  <evtMap key="xdc.runtime.Log.L_error">
+    <id>880</id>
+    <msg>ERROR%3A+%25%24F%25%24S</msg>
+  </evtMap>
+  <evtMap key="xdc.runtime.Log.L_warning">
+    <id>894</id>
+    <msg>WARNING%3A+%25%24F%25%24S</msg>
+  </evtMap>
+  <evtMap key="xdc.runtime.Log.L_info">
+    <id>910</id>
+    <msg>%25%24F%25%24S</msg>
+  </evtMap>
+  <evtMap key="xdc.runtime.Log.L_start">
+    <id>917</id>
+    <msg>Start%3A+%25%24S</msg>
+  </evtMap>
+  <evtMap key="xdc.runtime.Log.L_stop">
+    <id>928</id>
+    <msg>Stop%3A+%25%24S</msg>
+  </evtMap>
+  <evtMap key="xdc.runtime.Log.L_startInstance">
+    <id>938</id>
+    <msg>StartInstance%3A+%25%24S</msg>
+  </evtMap>
+  <evtMap key="xdc.runtime.Log.L_stopInstance">
+    <id>957</id>
+    <msg>StopInstance%3A+%25%24S</msg>
+  </evtMap>
+</xdc.runtime.Types.RtaDecoderData>

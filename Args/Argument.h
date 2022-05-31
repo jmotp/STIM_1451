@@ -9,7 +9,7 @@
 #define ARGS_ARGUMENT_H_
 
 #include <String>
-
+#include <vector>
 
 #include "TimeDuration.h"
 #include "TimeInstance.h"
@@ -71,9 +71,39 @@ case TIME_DURATION_ARRAY_TC: TimeDurationArray
 };*/
 
 class Argument{
+
+
+    private:
+    int type;
+    union value{
+        Boolean _valueError;
+        UInt8 _valueInt8;
+        UInt16 _valueUInt16;
+        UInt32 _valueUInt32;
+        Float32 _valueFloat32;
+        Float64 _valueFloat64;
+        String _valueString;
+        Octet _valueOctet;
+        Boolean _valueBoolean;
+        TimeInstance _valueTimeInstance;
+        TimeDuration _valueTimeDuration;
+        //QosParams valueQosParams;
+        UInt8Array _valueInt8Array;
+        UInt16Array _valueUInt16Array;
+        UInt32Array _valueUInt32Array;
+        Float32Array _valueFloat32Array;
+        Float64Array _valueFloat64Array;
+        StringArray _valueStringArray;
+        OctetArray _valueOctetArray;
+        BooleanArray _valueBooleanArray;
+        TimeInstanceArray _valueTimeInstanceArray;
+        TimeDurationArray _valueTimeDurationArray;
+    };
+
     public:
 
         Argument();
+        Argument(int type, String value);
         Argument(const Argument &);
         ~Argument();
 
@@ -82,9 +112,7 @@ class Argument{
         void _d (int);
         int _d () const;
 
-        void valueError(const bool&);
-        const bool & valueError() const;
-        bool & valueError();
+
 
 
 

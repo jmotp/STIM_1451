@@ -11,11 +11,18 @@
 #include <String>
 #include "Argument.h"
 #include <cstdint>
+#include <vector>
+#include <tuple>
 
 
 using namespace std;
 class ArgumentArray
 {
+
+
+private:
+    vector<tuple<string, Argument&>> argumentArray;
+
 public:
     ArgumentArray();
     virtual ~ArgumentArray();

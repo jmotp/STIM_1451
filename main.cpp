@@ -3,6 +3,31 @@
 #include <String>
 #include "Args/TimeDuration.h"
 #include "Args/TimeInstance.h"
+#include "Args/ArgumentArray.h"
+#include "Args/Argument.h"
+
+#define xdc__nolocalstring
+extern "C" {
+#include <xdc/std.h>
+#include <xdc/runtime/System.h>
+
+/* BIOS Header files */
+//#include <ti/sysbios/BIOS.h>
+//#include <ti/sysbios/knl/Task.h>
+
+/* TI-RTOS Header files */
+//#include <ti/drivers/GPIO.h>
+// #include <ti/drivers/I2C.h>
+// #include <ti/drivers/SDSPI.h>
+// #include <ti/drivers/SPI.h>
+// #include <ti/drivers/UART.h>
+// #include <ti/drivers/Watchdog.h>
+// #include <ti/drivers/WiFi.h>
+
+/* Board Header file */
+//#include "Board.h"
+}
+
 // ERROR ENCODING
 #define NO_ERROR 0
 #define INVALID_COMMID 1
@@ -28,7 +53,7 @@
 
 using namespace std;
 
-namespace IEEE1451Dot0{
+/*namespace IEEE1451Dot0{
     namespace Args{
        typedef std::vector<int8_t> Int8Array;
        typedef std::vector<int16_t> Int16Array;
@@ -49,7 +74,7 @@ namespace IEEE1451Dot0{
     }
 }
 
-
+*/
 
 
 
@@ -59,5 +84,10 @@ namespace IEEE1451Dot0{
 
 int main(void)
 {
-	return 0;
+    ArgumentArray argument;
+    Argument* argument_save;
+    argument.putByName("Test", Argument());
+    argument.getByIndex(0,argument_save);
+    System_printf("Here");
+    return 0;
 }

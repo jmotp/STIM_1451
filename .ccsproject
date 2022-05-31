@@ -5,12 +5,11 @@
 	<deviceVariant value="Cortex M.TM4C123GH6PM"/>
 	<deviceFamily value="TMS470"/>
 	<deviceEndianness value="little"/>
-	<codegenToolVersion value="20.2.5.LTS"/>
+	<codegenToolVersion value="20.2.6.LTS"/>
 	<isElfFormat value="true"/>
-	<connection value="common/targetdb/connections/uart_connection.xml"/>
-	<linkerCommandFile value="tm4c123gh6pm.cmd"/>
+	<connection value="common/targetdb/connections/Stellaris_ICDI_Connection.xml"/>
 	<rts value="libc.a"/>
 	<createSlaveProjects value=""/>
-	<templateProperties value="id=com.ti.common.project.core.emptyProjectWithMainTemplate"/>
-	<filesToOpen value="main.c"/>
+	<templateProperties value="id=com.ti.rtsc.TIRTOStivac.example_4,type=rtsc,products=com.ti.rtsc.TIRTOStivac,xdcToolsVersion=3_32_00_06_core,target=ti.targets.arm.elf.M4F,platform=ti.platforms.tiva:TM4C123GH6PM,buildProfile=release,isHybrid=true,configuroOptions=--compileOptions &quot;${COMPILER_FLAGS} &quot;"/>
+	<filesToOpen value=""/>
 </projectOptions>

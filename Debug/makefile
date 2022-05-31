@@ -4,18 +4,22 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS
+CG_TOOL_ROOT := C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS
 
-GEN_OPTS__FLAG := 
-GEN_CMDS__FLAG := 
+GEN_OPTS__FLAG := --cmd_file="configPkg/compiler.opt" 
+GEN_CMDS__FLAG := -l"configPkg/linker.cmd" 
 
 ORDERED_OBJS += \
+"./EK_TM4C123GXL.obj" \
 "./main.obj" \
-"./tm4c123gh6pm_startup_ccs.obj" \
+"./Args/Argument.obj" \
 "./Args/ArgumentArray.obj" \
 "./Args/TypeCode.obj" \
-"../tm4c123gh6pm.cmd" \
+"../EK_TM4C123GXL.cmd" \
 $(GEN_CMDS__FLAG) \
+-l"C:/ti/tirtos_tivac_2_16_00_08/products/TivaWare_C_Series-2.1.1.71b/grlib/ccs/Debug/grlib.lib" \
+-l"C:/ti/tirtos_tivac_2_16_00_08/products/TivaWare_C_Series-2.1.1.71b/usblib/ccs/Debug/usblib.lib" \
+-l"C:/ti/tirtos_tivac_2_16_00_08/products/TivaWare_C_Series-2.1.1.71b/driverlib/ccs/Debug/driverlib.lib" \
 -llibc.a \
 
 -include ../makefile.init
@@ -125,43 +129,44 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-STIM.out \
+test_test.out \
 
 EXE_OUTPUTS__QUOTED += \
-"STIM.out" \
+"test_test.out" \
 
 BIN_OUTPUTS += \
-STIM.hex \
+test_test.hex \
 
 BIN_OUTPUTS__QUOTED += \
-"STIM.hex" \
+"test_test.hex" \
 
 
 # All Target
 all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
-	@$(MAKE) --no-print-directory -Onone "STIM.out"
+	@$(MAKE) --no-print-directory -Onone "test_test.out"
 
 # Tool invocations
-STIM.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
+test_test.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: Arm Linker'
-	"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=PART_TM4C123GH6PM -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"STIM.map" --heap_size=0 --stack_size=512 -i"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/lib" -i"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="STIM_linkInfo.xml" --rom_model -o "STIM.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=PART_TM4C123GH6PM --define=ccs --define=TIVAWARE -g --gcc --diag_warning=225 --diag_warning=255 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi -z -m"test_test.map" --heap_size=0 --stack_size=512 -i"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/lib" -i"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="test_test_linkInfo.xml" --rom_model -o "test_test.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
-STIM.hex: $(EXE_OUTPUTS)
+test_test.hex: $(EXE_OUTPUTS)
 	@echo 'Building secondary target: "$@"'
 	@echo 'Invoking: Arm Hex Utility'
-	"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armhex" --diag_wrap=off -o "STIM.hex" $(EXE_OUTPUTS__QUOTED)
+	"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/bin/armhex" --diag_wrap=off -o "test_test.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building secondary target: "$@"'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "tm4c123gh6pm_startup_ccs.obj" "Args\ArgumentArray.obj" "Args\TypeCode.obj" 
-	-$(RM) "tm4c123gh6pm_startup_ccs.d" 
-	-$(RM) "main.d" "Args\ArgumentArray.d" "Args\TypeCode.d" 
+	-$(RM) $(BIN_OUTPUTS__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
+	-$(RM) "EK_TM4C123GXL.obj" "main.obj" "Args\Argument.obj" "Args\ArgumentArray.obj" "Args\TypeCode.obj" 
+	-$(RM) "EK_TM4C123GXL.d" 
+	-$(RM) "main.d" "Args\Argument.d" "Args\ArgumentArray.d" "Args\TypeCode.d" 
+	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
 	-@echo 'Finished clean'
 	-@echo ' '
 
