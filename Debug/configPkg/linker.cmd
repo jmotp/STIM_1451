@@ -9,7 +9,13 @@
  */
 
 
--l"C:\Users\jmotp\workspace_v11\test_test\Debug\configPkg\package\cfg\build_pem4f.oem4f"
+-l"C:\Users\jmotp\workspace_v11\test_test\Debug\configPkg\package\cfg\empty_pem4f.oem4f"
+-l"C:/ti/tirtos_tivac_2_16_00_08/products/tidrivers_tivac_2_16_00_08/packages/ti/mw/wifi/cc3x00/lib/cc3x00_host_driver.aem4f"
+-l"C:/ti/tirtos_tivac_2_16_00_08/products/tidrivers_tivac_2_16_00_08/packages/ti/drivers/lib/drivers_tivaware.aem4f"
+-l"C:/ti/tirtos_tivac_2_16_00_08/products/tidrivers_tivac_2_16_00_08/packages/ti/drivers/lib/drivers_wifi_tivaware.aem4f"
+-l"C:\ti\tirtos_tivac_2_16_00_08\products\tidrivers_tivac_2_16_00_08\packages\ti\mw\fatfs\lib\release\ti.mw.fatfs.aem4f"
+-l"C:/ti/tirtos_tivac_2_16_00_08/products/tidrivers_tivac_2_16_00_08/packages/ti/drivers/ports/lib/tirtosport.aem4f"
+-l"C:\Users\jmotp\workspace_v11\test_test\src\sysbios\sysbios.aem4f"
 -l"C:\ti\tirtos_tivac_2_16_00_08\products\bios_6_45_01_29\packages\ti\catalog\arm\cortexm4\tiva\ce\lib\Boot.aem4f"
 -l"C:\ti\tirtos_tivac_2_16_00_08\products\bios_6_45_01_29\packages\ti\targets\arm\rtsarm\lib\ti.targets.arm.rtsarm.aem4f"
 -l"C:\ti\tirtos_tivac_2_16_00_08\products\bios_6_45_01_29\packages\ti\targets\arm\rtsarm\lib\boot.aem4f"
@@ -23,9 +29,9 @@
 --symbol_map _stack=__stack
 
 
---args 0x200
--heap  0x1000
--stack 0x1000
+--args 0x0
+-heap  0x0
+-stack 0x300
 
 /*
  * Linker command file contributions from all loaded packages:
@@ -61,6 +67,17 @@
 
 /* Content from ti.targets.arm.rtsarm (null): */
 
+/* Content from ti.sysbios.interfaces (null): */
+
+/* Content from ti.sysbios.family (null): */
+
+/* Content from ti.sysbios.family.arm (ti/sysbios/family/arm/linkcmd.xdt): */
+--retain "*(.vecs)"
+
+/* Content from ti.sysbios.rts (ti/sysbios/rts/linkcmd.xdt): */
+
+/* Content from xdc.runtime.knl (null): */
+
 /* Content from ti.catalog.arm.peripherals.timers (null): */
 
 /* Content from ti.catalog.arm.cortexm4 (null): */
@@ -79,7 +96,40 @@
 
 /* Content from ti.platforms.tiva (null): */
 
+/* Content from ti.sysbios (null): */
+
+/* Content from ti.drivers.ports (null): */
+
+/* Content from ti.mw.fatfs (null): */
+
+/* Content from ti.drivers (null): */
+
+/* Content from ti.mw.wifi.cc3x00 (null): */
+
+/* Content from ti.mw (null): */
+
+/* Content from ti.sysbios.hal (null): */
+
+/* Content from ti.sysbios.family.arm.lm4 (null): */
+
+/* Content from ti.sysbios.family.arm.m3 (ti/sysbios/family/arm/m3/linkcmd.xdt): */
+-u _c_int00
+--retain "*(.resetVecs)"
+ti_sysbios_family_arm_m3_Hwi_nvic = 0xe000e000;
+
+/* Content from ti.sysbios.knl (null): */
+
+/* Content from ti.sysbios.gates (null): */
+
+/* Content from ti.sysbios.xdcruntime (null): */
+
+/* Content from ti.sysbios.heaps (null): */
+
+/* Content from ti.sysbios.utils (null): */
+
 /* Content from configPkg (null): */
+
+/* Content from xdc.services.io (null): */
 
 
 
@@ -92,7 +142,9 @@ xdc_runtime_Startup__RESETFXN__C = 1;
 
 SECTIONS
 {
-    .bootVecs: load > 0x0
+    .bootVecs:  type = DSECT
+    .vecs: load > 0x20000000
+    .resetVecs: load > 0x0
 
 
 

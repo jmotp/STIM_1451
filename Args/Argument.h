@@ -15,6 +15,9 @@
 #include "TimeInstance.h"
 #include "TimeRepresentation.h"
 
+
+
+
 using namespace std;
 
 typedef uint8_t UInt8;
@@ -42,6 +45,8 @@ typedef std::vector<char> OctetArray;
 typedef std::vector<bool> BooleanArray;
 typedef std::vector<TimeInstance> TimeInstanceArray;
 typedef std::vector<TimeDuration> TimeDurationArray;
+
+
 /*
 IDL: union Argument switch (TypeCode) {
 case UNKNOWN_TC: Boolean valueError;
@@ -70,44 +75,68 @@ case TIME_DURATION_ARRAY_TC: TimeDurationArray
  valueTimeDurationArray;
 };*/
 
+
+
 class Argument{
 
 
-    private:
-    int type;
-    union value{
-        Boolean _valueError;
-        UInt8 _valueInt8;
-        UInt16 _valueUInt16;
-        UInt32 _valueUInt32;
-        Float32 _valueFloat32;
-        Float64 _valueFloat64;
-        String _valueString;
-        Octet _valueOctet;
-        Boolean _valueBoolean;
-        TimeInstance _valueTimeInstance;
-        TimeDuration _valueTimeDuration;
-        //QosParams valueQosParams;
-        UInt8Array _valueInt8Array;
-        UInt16Array _valueUInt16Array;
-        UInt32Array _valueUInt32Array;
-        Float32Array _valueFloat32Array;
-        Float64Array _valueFloat64Array;
-        StringArray _valueStringArray;
-        OctetArray _valueOctetArray;
-        BooleanArray _valueBooleanArray;
-        TimeInstanceArray _valueTimeInstanceArray;
-        TimeDurationArray _valueTimeDurationArray;
-    };
+    public:
+    enum TypeCode{
+             UNKNOWN_TC,
+             // Simple types
+             UInt8_TC, UInt16_TC, UInt32_TC,
+             Float32_TC, Float64TC, String_TC,
+             Octet_TC, Boolean_TC,
+             Time_Instance_TC, Time_Duration_TC,
+             Qos_Params_TC,
+             // Arrays of simple types. Note no QOS array
+             UInt8_Array_TC, UInt16_Array_TC, UINT32_Array_TC,
+             Float32_Array_TC, Float64_Array_TC, String_Array_TC,
+             Octet_Array_TC, Boolean_Array_TC,
+            Time_Instance_Array_TC, Time_Duration_Array_TC
+            } type;
+    union{
+           Boolean _valueError;
+           UInt8 _valueUInt8;
+           UInt16 _valueUInt16;
+           UInt32 _valueUInt32;
+           Float32 _valueFloat32;
+           Float64 _valueFloat64;
+           String _valueString;
+           Octet _valueOctet;
+           Boolean _valueBoolean;
+           TimeInstance _valueTimeInstance;
+           TimeDuration _valueTimeDuration;
+           //QosParams valueQosParams;
+           UInt8Array _valueInt8Array;
+           UInt16Array _valueUInt16Array;
+           UInt32Array _valueUInt32Array;
+           Float32Array _valueFloat32Array;
+           Float64Array _valueFloat64Array;
+           StringArray _valueStringArray;
+           OctetArray _valueOctetArray;
+           BooleanArray _valueBooleanArray;
+           TimeInstanceArray _valueTimeInstanceArray;
+           TimeDurationArray _valueTimeDurationArray;
+
+       };
 
     public:
 
+
+
         Argument();
-        Argument(int type, String value);
-        Argument(const Argument &);
+
+        Argument(TypeCode _type, void * value_ref);
+
+
+
         ~Argument();
 
-        Argument &operator =(const Argument&);
+
+
+        Argument& operator= (const Argument&);
+        Argument(const Argument &);
 
         void _d (int);
         int _d () const;

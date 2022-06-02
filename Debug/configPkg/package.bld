@@ -11,7 +11,7 @@ var makeAssembly = false;
 var Executable = xdc.module('xdc.bld.Executable');
 
 var exeOpts = new Executable.Attrs({
-        cfgScript: 'C:/Users/jmotp/workspace_v11/test_test/Debug__opt_for_speed__5/configPkg/package/build.cfg',
+        cfgScript: 'C:/Users/jmotp/workspace_v11/test_test/empty.cfg',
         profile: 'release',
         cfgHome: 'configPkg',
 });
@@ -20,7 +20,7 @@ exeOpts.cfgArgs = 'null';
 exeOpts.cfgArgsEncoded = true;
 
 var exe = Pkg[makeAssembly ? 'addAssembly': 'addExecutable'](
-    'build',
+    'empty',
     targ,
     platform,
     exeOpts
@@ -40,10 +40,10 @@ else {
 }
 
 var thisObj = {
-    cfg:        '../Debug__opt_for_speed__5/configPkg/package/build.cfg',
+    cfg:        '../empty.cfg',
     outputPath: 'C:/Users/jmotp/workspace_v11/test_test/Debug/configPkg',
-    exeName:    'build' + suffix,
-    exeIntName: 'build' + suffix.replace('.', '_'),
+    exeName:    'empty' + suffix,
+    exeIntName: 'empty' + suffix.replace('.', '_'),
     targ:       targ,
     linkerCommandFile: 'linker.cmd',
     compilerOptFile: 'compiler.opt',
