@@ -8,7 +8,7 @@
 #include "Args/ArgumentArray.h"
 #include "Args/Argument.h"
 
-#define xdc__nolocalstring
+#define xdc_nolocalstring
 extern "C"{
 #include <xdc/std.h>
 #include <xdc/runtime/System.h>
@@ -22,10 +22,23 @@ extern "C"{
 #include "inc/hw_ints.h"
 }
 
+#include"EK_TM4C123GXL.h"
+
+#include "ModuleCommunications/Comms.h"
+
+#include "Util/Codec.h"
+#include "driverlib/uart.h"
+#include "utils/uartstdio.h"
+
+
 
 /* BIOS Header files */
-//#include <ti/sysbios/BIOS.h>
-//#include <ti/sysbios/knl/Task.h>
+#include <ti/sysbios/BIOS.h>
+#include <ti/sysbios/knl/Task.h>
+#include <driverlib/EEPROM.h>
+
+#define TASKSTACKSIZE 2048
+
 
 /* TI-RTOS Header files */
 //#include <ti/drivers/GPIO.h>
@@ -94,53 +107,13 @@ using namespace std;
  * main.c
  */
 
-volatile uint32_t g_ui32MsgCount = 0;
-volatile uint32_t g_bErrFlag=0;
 
+int mainTask(void){
 
-void
-CANIntHandler(void)
-{
-    uint32_t ui32Status;
+    EK_TM4C123GXL_initGeneral();
 
-    ui32Status = CANIntStatus(CAN0_BASE, CAN_INT_STS_CAUSE);
+    initComms();
 
-    if(ui32Status == CAN_INT_INTID_STATUS)
-    {
-        ui32Status = CANStatusGet(CAN0_BASE, CAN_STS_CONTROL);
-
-        g_bErrFlag = 1;
-    }
-    else if(ui32Status == 1)
-    {
-        CANIntClear(CAN0_BASE, 1);
-
-        g_ui32MsgCount++;
-
-        g_bErrFlag = 0;
-    }
-    else
-    {
-
-    }
-}
-
-int main(void)
-{
-    SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ | SYSCTL_OSC_MAIN);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
-    GPIOPinConfigure(GPIO_PE4_CAN0RX);
-    GPIOPinConfigure(GPIO_PE5_CAN0TX);
-
-    GPIOPinTypeCAN(GPIO_PORTE_BASE, GPIO_PIN_4 | GPIO_PIN_5);
-
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_CAN0);
-    CANInit(CAN0_BASE);
-    CANBitRateSet(CAN0_BASE, SysCtlClockGet(), 500000);
-    CANIntRegister(CAN0_BASE, CANIntHandler); // use dynamic vector table allocation
-    CANIntEnable(CAN0_BASE, CAN_INT_MASTER | CAN_INT_ERROR | CAN_INT_STATUS);
-    IntEnable(INT_CAN0);
-    CANEnable(CAN0_BASE);
     ArgumentArray argument;
     UInt32 integer= 33;
     System_printf("Beggining...\n");
@@ -148,25 +121,68 @@ int main(void)
     System_printf("Before putByName: %u \n",argument_send._valueUInt32);
 
 
-    tCANMsgObject msg;
-    unsigned char msgData[8];
+
+    System_flush();
+    String s = "hello\n";
+
+    Argument argument2(Argument::Octet_Array_TC,&s);
+    argument2.print();
     System_flush();
 
-    while(true){
-        System_printf("Before putByName: %u \n",g_ui32MsgCount);
-        System_flush();
-        if(g_ui32MsgCount>0){
-            System_printf("Before putByName: %u \n",g_ui32MsgCount);
-            msg.pui8MsgData = msgData; // set pointer to rx buffer
-            CANMessageGet(CAN0_BASE, 1, &msg, 0);
-            g_ui32MsgCount = 0;
+    OctetArray test("");
+    argument.putByName("Test",argument_send);
+    argument_send.print();
+    argumentArray2OctetArray(argument,test);
+
+
+
+    StringArray stringArray;
+        argument.getNames(stringArray);
+        for(String out: stringArray){
+             System_printf("%s\n", out.c_str());
+             System_flush();
         }
 
-    }
-    argument.putByName("Test",argument_send);
+
+
+
+
+
+
     Argument argument_save;
     argument.getByIndex(0,argument_save);
+    return 0;
 
+}
+
+Task_Struct task0Struct,task1Struct;
+Char task0Stack[TASKSTACKSIZE],task1Stack[TASKSTACKSIZE];
+
+/*
+ *  ======== main ========
+ */
+Int main()
+{
+
+
+
+    /* Construct BIOS objects */
+    Task_Params taskParams,taskParams1;
+
+    //mainTask();
+    /* Construct clock Task thread */
+    Task_Params_init(&taskParams);
+    taskParams.stackSize = TASKSTACKSIZE;
+    taskParams.stack = &task0Stack;
+    Task_construct(&task0Struct, (Task_FuncPtr)mainTask, &taskParams, NULL);
+
+    /* Construct clock Task thread */
+    Task_Params_init(&taskParams1);
+    taskParams1.stackSize = TASKSTACKSIZE;
+    taskParams1.stack = &task1Stack;
+    Task_construct(&task1Struct, (Task_FuncPtr)commTask, &taskParams1, NULL);
+
+    BIOS_start();
 
     return 0;
 }

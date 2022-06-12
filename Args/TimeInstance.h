@@ -8,7 +8,7 @@
 #ifndef TIMEINSTANCE_H_
 #define TIMEINSTANCE_H_
 #include "TimeRepresentation.h"
-#include<cstdint>
+#include <cstdint>
 
 struct TimeInstance
 {

@@ -29,17 +29,21 @@ public:
     ArgumentArray();
     virtual ~ArgumentArray();
 
-    uint16_t getByName(string name, Argument& argument);
+    UInt16 getByName(String name, Argument& argument);
 
-    uint16_t getByIndex(uint16_t index, Argument& argument);
+    UInt16 getByIndex(UInt16 index, Argument& argument);
 
-    uint16_t putByName(string name, Argument& value);
+    UInt16 putByName(String name, Argument& value);
 
-    uint16_t putByIndex(uint16_t index, Argument value);
+    UInt16 putByIndex(UInt16 index, Argument value);
 
-    uint16_t getNames(string* names);
+    UInt16 stringToIndex( String name, UInt16& index);
 
-    uint16_t getIndexes(int *indexes);
+    UInt16 getNames(StringArray& names);
+
+    UInt16 getIndexes(UInt16Array& indexes);
+
+    UInt16 size(void);
 
 
 };

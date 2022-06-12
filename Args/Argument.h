@@ -8,43 +8,18 @@
 #ifndef ARGS_ARGUMENT_H_
 #define ARGS_ARGUMENT_H_
 
-#include <String>
-#include <vector>
 
 #include "TimeDuration.h"
 #include "TimeInstance.h"
 #include "TimeRepresentation.h"
-
+#include "QosParams.h"
+#include "Types.h"
+#include <string>
+#include <sstream>
 
 
 
 using namespace std;
-
-typedef uint8_t UInt8;
-typedef uint16_t UInt16;
-typedef uint32_t UInt32;
-typedef int8_t Int8;
-typedef int16_t Int16;
-typedef int32_t Int32;
-typedef float Float32;
-typedef double Float64;
-typedef string String;
-typedef char Octet;
-typedef bool Boolean;
-
-typedef std::vector<int8_t> Int8Array;
-typedef std::vector<int16_t> Int16Array;
-typedef std::vector<int32_t> Int32Array;
-typedef std::vector<uint8_t> UInt8Array;
-typedef std::vector<uint16_t> UInt16Array;
-typedef std::vector<uint32_t> UInt32Array;
-typedef std::vector<float> Float32Array;
-typedef std::vector<double> Float64Array;
-typedef std::vector<string> StringArray;
-typedef std::vector<char> OctetArray;
-typedef std::vector<bool> BooleanArray;
-typedef std::vector<TimeInstance> TimeInstanceArray;
-typedef std::vector<TimeDuration> TimeDurationArray;
 
 
 /*
@@ -107,7 +82,7 @@ class Argument{
            Boolean _valueBoolean;
            TimeInstance _valueTimeInstance;
            TimeDuration _valueTimeDuration;
-           //QosParams valueQosParams;
+           QosParams valueQosParams;
            UInt8Array _valueInt8Array;
            UInt16Array _valueUInt16Array;
            UInt32Array _valueUInt32Array;
@@ -126,25 +101,25 @@ class Argument{
 
 
         Argument();
-
         Argument(TypeCode _type, void * value_ref);
-
-
-
         ~Argument();
 
+        UInt16 toString(String& result);
 
+        UInt16 write(stringstream& ss);
 
         Argument& operator= (const Argument&);
         Argument(const Argument &);
 
-        void _d (int);
-        int _d () const;
+        UInt16 print();
+
 
 
 
 
 
 };
+
+void reverseStr(string& str);
 
 #endif /* ARGS_ARGUMENT_H_ */
