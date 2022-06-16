@@ -8,6 +8,8 @@
 #include "Args/ArgumentArray.h"
 #include "Args/Argument.h"
 
+#define ISOTP_BYTE_ORDER_LITTLE_ENDIAN
+
 #define xdc_nolocalstring
 extern "C"{
 #include <xdc/std.h>
@@ -22,13 +24,24 @@ extern "C"{
 #include "inc/hw_ints.h"
 }
 
+#include "driverlib/systick.h"
+
+
 #include"EK_TM4C123GXL.h"
 
-#include "ModuleCommunications/Comms.h"
+#include "ModuleCommunications/Comm.h"
+
+#include "ModuleCommunications/Can.h"
+
+#include "isotp/isotp_user.h"
+
 
 #include "Util/Codec.h"
 #include "driverlib/uart.h"
 #include "utils/uartstdio.h"
+
+#include <ti/sysbios/knl/Clock.h>
+
 
 
 
@@ -108,11 +121,13 @@ using namespace std;
  */
 
 
+Can can0;
+
 int mainTask(void){
 
     EK_TM4C123GXL_initGeneral();
 
-    initComms();
+    //initComms();
 
     ArgumentArray argument;
     UInt32 integer= 33;
@@ -143,7 +158,23 @@ int mainTask(void){
              System_flush();
         }
 
+    extern uint32_t g_newMessage;
+    while(1){
+        static OctetArray buffer;
+        static uint32_t len;
+        static Boolean buf_bool;
+        if(g_newMessage){
+            can0.readMsg(0, TimeDuration{0,0},len , buffer, buf_bool);
+               g_newMessage=0;
+            System_printf("String: %s\n", buffer.c_str());
+            System_flush();
 
+        }
+        Task_yield();
+
+
+
+    }
 
 
 
@@ -158,29 +189,41 @@ int mainTask(void){
 Task_Struct task0Struct,task1Struct;
 Char task0Stack[TASKSTACKSIZE],task1Stack[TASKSTACKSIZE];
 
+
+
+
+void CanTaskWrapper() {
+    can0.commTask();
+}
+
 /*
  *  ======== main ========
  */
 Int main()
 {
 
-
-
+    Clock_tickStart();
     /* Construct BIOS objects */
     Task_Params taskParams,taskParams1;
 
-    //mainTask();
     /* Construct clock Task thread */
     Task_Params_init(&taskParams);
     taskParams.stackSize = TASKSTACKSIZE;
     taskParams.stack = &task0Stack;
+    taskParams.priority = 1;
     Task_construct(&task0Struct, (Task_FuncPtr)mainTask, &taskParams, NULL);
+
+
+    can0.init();
+
+
 
     /* Construct clock Task thread */
     Task_Params_init(&taskParams1);
     taskParams1.stackSize = TASKSTACKSIZE;
     taskParams1.stack = &task1Stack;
-    Task_construct(&task1Struct, (Task_FuncPtr)commTask, &taskParams1, NULL);
+    taskParams1.priority = 1;
+    Task_construct(&task1Struct, (Task_FuncPtr)CanTaskWrapper, &taskParams1, NULL);
 
     BIOS_start();
 
