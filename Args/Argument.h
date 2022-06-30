@@ -20,8 +20,8 @@
 
 #define xdc__nolocalstring
 extern "C" {
-    #include <xdc/std.h>
-    #include <xdc/runtime/System.h>
+    //#include <xdc/std.h>
+    //#include <xdc/runtime/System.h>
 }
 
 

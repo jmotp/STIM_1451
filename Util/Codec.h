@@ -8,8 +8,8 @@
 #ifndef UTIL_CODEC_H_
 #define UTIL_CODEC_H_
 
-#include "Args/Argument.h"
-#include "Args/ArgumentArray.h"
+#include "../Args/Argument.h"
+#include "../Args/ArgumentArray.h"
 #include <istream>
 #include <sstream>
 

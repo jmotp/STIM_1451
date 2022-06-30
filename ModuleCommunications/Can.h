@@ -17,6 +17,7 @@
 #include <vector>
 #include <isotp/isotp.h>
 #include <config.h>
+#include <map>
 
 /* Alloc IsoTpLink statically in RAM */
     static IsoTpLink g_link;
@@ -86,7 +87,7 @@ private:
     
     std::queue<CanMessage> CanQueueSend;
 
-    std::vector<CanMessage> CanReceiveArray;
+    std::map<int, CanMessage> CanReceiveArray;
 
     //the CAN SEND message Object
     tCANMsgObject msgSend;

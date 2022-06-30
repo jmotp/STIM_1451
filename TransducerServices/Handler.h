@@ -8,10 +8,10 @@
 #ifndef TRANSDUCERSERVICES_HANDLER_H_
 #define TRANSDUCERSERVICES_HANDLER_H_
 
-#include <Args/Types.h>
-#include <Args/ArgumentArray.h>
-#include <Args/Argument.h>
-#include <TransducerServices/CommandCodes.h>
+#include "../Args/Types.h"
+#include "../Args/ArgumentArray.h"
+#include "../Args/Argument.h"
+#include "CommandCodes.h"
 
 class Handler
 {

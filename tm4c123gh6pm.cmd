@@ -35,7 +35,7 @@ SECTIONS
     .pinit  :   > FLASH
     .init_array : > FLASH
 
-    .vtable :   > 0x20000000
+    .vtable :   > SRAM
     .data   :   > SRAM
     .bss    :   > SRAM
     .sysmem :   > SRAM

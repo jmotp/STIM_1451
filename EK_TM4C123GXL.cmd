@@ -34,6 +34,8 @@
  *  Define the memory block start/length for the EK_TM4C123GXL M4
  */
 
+--retain=g_pfnVectors
+
 MEMORY
 {
     FLASH (RX) : origin = 0x00000000, length = 0x00040000
@@ -41,7 +43,7 @@ MEMORY
 }
 
 /* Section allocation in memory */
-
+/*
 SECTIONS
 {
     .text   :   > FLASH
@@ -54,4 +56,24 @@ SECTIONS
     .bss    :   > SRAM
     .sysmem :   > SRAM
     .stack  :   > SRAM
+    .vtable :   > 0x20000000
+    //.vtable :   > SRAM
 }
+*/
+SECTIONS
+{
+    .intvecs:   > 0x00000000
+    .text   :   > FLASH
+    .const  :   > FLASH
+    .cinit  :   > FLASH
+    .pinit  :   > FLASH
+    .init_array : > FLASH
+
+    .vtable :   > 0x20000000
+    .data   :   > SRAM
+    .bss    :   > SRAM
+    .sysmem :   > SRAM
+    .stack  :   > SRAM
+}
+
+__STACK_TOP = __stack + 512;

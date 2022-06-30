@@ -48,8 +48,9 @@ enum TypeCode{
         } type;
 */
 
-Argument::Argument(TypeCode _type, void * value_ref){
+Argument::Argument(TypeCode _type, void* value_ref){
     type = _type;
+    printf("Created argument of type %d\n", _type);
 
     switch(type){
         case UInt8_TC:
@@ -60,9 +61,12 @@ Argument::Argument(TypeCode _type, void * value_ref){
             break;
 
         case Octet_Array_TC:
-            System_printf("%s",((string)*(string*)(value_ref)).c_str());
-            System_flush();
-            new(&this->_valueOctetArray) string(*(string*)value_ref);
+
+            fprintf(stdout,"%s",((string)*(string*)(value_ref)).c_str());
+            fflush(stdout);
+            new(&this->_valueOctetArray) string(*((string*)value_ref));
+            //printf("String pointer %p\n", _valueOctetArray);
+
             break;
         }
 
@@ -77,7 +81,9 @@ Argument::Argument(TypeCode _type, void * value_ref){
 Argument& Argument::operator= (const Argument& argument){
 
     this->type = argument.type;
+    printf("Copying Argument of type %d via =\n", type);
 
+    printf("Here?\n");
     switch(argument.type){
         case UInt8_TC:
             this->_valueUInt8 = argument._valueUInt8;
@@ -91,7 +97,6 @@ Argument& Argument::operator= (const Argument& argument){
         case Octet_Array_TC:
 //            System_printf("String Pointer: %d\n", argument._valueOctetArray);
 //            System_flush();
-
             new(&this->_valueOctetArray) string(argument._valueOctetArray);
         }
 
@@ -100,21 +105,22 @@ Argument& Argument::operator= (const Argument& argument){
 }
 
 UInt16 Argument::print(){
+
     switch(this->type){
             case UInt8_TC:
-                System_printf("%u", this->_valueUInt8);
+               fprintf(stdout,"%u", this->_valueUInt8);
                 break;
             case UInt16_TC:
-                System_printf("%u", this->_valueUInt16);
+                fprintf(stdout,"%u", this->_valueUInt16);
                 break;
             case UInt32_TC:
-                System_printf("Argument long %u\n", this->_valueUInt32);
+                fprintf(stdout,"Argument long %u\n", this->_valueUInt32);
                 break;
             case Octet_Array_TC:
-                System_printf("Argument %s\n", this->_valueOctetArray.c_str());
+                fprintf(stdout,"Argument String %s of size%d\n", (this->_valueOctetArray).c_str(),_valueOctetArray.size());
                 break;
     }
-    System_flush();
+    fflush(stdout);
     return 0;
 
 }
@@ -134,7 +140,7 @@ UInt16 Argument::toString(String& result){
                     result = this->_valueOctetArray;
                     break;
         }
-        System_flush();
+       fflush(stdout);
         return 0;
 
 }
@@ -144,19 +150,19 @@ UInt16 Argument::write(stringstream& ss){
     uint16_t arg_size;
     ss.write((const char*)&type,sizeof(uint8_t));
     switch(this->type){
-        
                     case UInt8_TC:
                         ss.write((const char*)&(this->_valueUInt8),sizeof(uint8_t));
                         break;
                     case UInt16_TC:
+                    {
                         uint16_t buffer_ = this->_valueUInt16;
                         swapByteOrder(buffer_);
                         size=2;
                         ss.write((const char*)&(buffer_),sizeof(uint8_t));
                         break;
+                    }
                     case UInt32_TC:
-
-
+                    {
                         uint32_t buffer = this->_valueUInt32;
                         swapByteOrder(buffer);
                         size=4;
@@ -165,6 +171,7 @@ UInt16 Argument::write(stringstream& ss){
                         ss.write((const char*)(&arg_size),2);
                         ss.write((const char*)&(buffer),sizeof(uint32_t));
                         break;
+                    }
                     case Octet_Array_TC:
                         size = this->_valueOctetArray.size();
 //                        System_printf("Size: %d\n", size);
@@ -182,11 +189,14 @@ UInt16 Argument::write(stringstream& ss){
 
 Argument::Argument(const Argument & arg)
 {
+
     this->type = arg.type;
+    printf("Copying Argument of type %d\n", type);
     switch(this->type){
         case UInt32_TC: this->_valueUInt32 = arg._valueUInt32;
         break;
         case Octet_Array_TC: new(&this->_valueOctetArray) string(arg._valueOctetArray);
+        //printf("String pointer %p\n", _valueOctetArray);
      }
     // TODO Auto-generated constructor stub
 
@@ -194,9 +204,13 @@ Argument::Argument(const Argument & arg)
 
 Argument::~Argument()
 {
+    printf("Destructing Argument of type %d\n", type);
+
     switch(type){
            this->print();
-           case Octet_Array_TC: delete(((string*)&(this->_valueOctetArray)));
+           case Octet_Array_TC:
+               //printf("String pointer %p\n", _valueOctetArray);
+               _valueOctetArray.~string();
         }
     // TODO Auto-generated destructor stub
 };

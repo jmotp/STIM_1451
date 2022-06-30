@@ -15,7 +15,17 @@ ORDERED_OBJS += \
 "./Args/Argument.obj" \
 "./Args/ArgumentArray.obj" \
 "./Args/TypeCode.obj" \
-"../EK_TM4C123GXL.cmd" \
+"./ModuleCommunications/Can.obj" \
+"./ModuleCommunications/Comm.obj" \
+"./ModuleCommunications/NetComm.obj" \
+"./ModuleCommunications/NetReceive.obj" \
+"./ModuleCommunications/Receive.obj" \
+"./ModuleCommunications/Registration.obj" \
+"./TransducerServices/Handler.obj" \
+"./Util/Codec.obj" \
+"./isotp/isotp.obj" \
+"./isotp/isotp_user.obj" \
+"../tm4c123gh6pm.cmd" \
 $(GEN_CMDS__FLAG) \
 -l"C:/ti/tirtos_tivac_2_16_00_08/products/TivaWare_C_Series-2.1.1.71b/grlib/ccs/Debug/grlib.lib" \
 -l"C:/ti/tirtos_tivac_2_16_00_08/products/TivaWare_C_Series-2.1.1.71b/usblib/ccs/Debug/usblib.lib" \
@@ -31,8 +41,16 @@ RMDIR := RMDIR /S/Q
 -include sources.mk
 -include subdir_vars.mk
 -include Args/subdir_vars.mk
+-include ModuleCommunications/subdir_vars.mk
+-include TransducerServices/subdir_vars.mk
+-include Util/subdir_vars.mk
+-include isotp/subdir_vars.mk
 -include subdir_rules.mk
 -include Args/subdir_rules.mk
+-include ModuleCommunications/subdir_rules.mk
+-include TransducerServices/subdir_rules.mk
+-include Util/subdir_rules.mk
+-include isotp/subdir_rules.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -129,43 +147,43 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-test_test.out \
+STIM.out \
 
 EXE_OUTPUTS__QUOTED += \
-"test_test.out" \
+"STIM.out" \
 
 BIN_OUTPUTS += \
-test_test.hex \
+STIM.hex \
 
 BIN_OUTPUTS__QUOTED += \
-"test_test.hex" \
+"STIM.hex" \
 
 
 # All Target
 all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
-	@$(MAKE) --no-print-directory -Onone "test_test.out"
+	@$(MAKE) --no-print-directory -Onone "STIM.out"
 
 # Tool invocations
-test_test.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
+STIM.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: Arm Linker'
-	"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=PART_TM4C123GH6PM --define=ccs --define=TIVAWARE -g --gcc --diag_warning=225 --diag_warning=255 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi -z -m"test_test.map" --heap_size=0 --stack_size=512 -i"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/lib" -i"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="test_test_linkInfo.xml" --rom_model -o "test_test.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=PART_TM4C123GH6PM --define=ccs --define=TIVAWARE -g --gcc --diag_warning=225 --diag_warning=255 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi -z -m"STIM.map" --heap_size=0 --stack_size=512 -i"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/lib" -i"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="STIM_linkInfo.xml" --rom_model -o "STIM.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
-test_test.hex: $(EXE_OUTPUTS)
+STIM.hex: $(EXE_OUTPUTS)
 	@echo 'Building secondary target: "$@"'
 	@echo 'Invoking: Arm Hex Utility'
-	"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/bin/armhex" --diag_wrap=off -o "test_test.hex" $(EXE_OUTPUTS__QUOTED)
+	"C:/ti/ccs1120/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/bin/armhex" --diag_wrap=off -o "STIM.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building secondary target: "$@"'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "EK_TM4C123GXL.obj" "main.obj" "Args\Argument.obj" "Args\ArgumentArray.obj" "Args\TypeCode.obj" 
+	-$(RM) "EK_TM4C123GXL.obj" "main.obj" "Args\Argument.obj" "Args\ArgumentArray.obj" "Args\TypeCode.obj" "ModuleCommunications\Can.obj" "ModuleCommunications\Comm.obj" "ModuleCommunications\NetComm.obj" "ModuleCommunications\NetReceive.obj" "ModuleCommunications\Receive.obj" "ModuleCommunications\Registration.obj" "TransducerServices\Handler.obj" "Util\Codec.obj" "isotp\isotp.obj" "isotp\isotp_user.obj" 
 	-$(RM) "EK_TM4C123GXL.d" 
-	-$(RM) "main.d" "Args\Argument.d" "Args\ArgumentArray.d" "Args\TypeCode.d" 
+	-$(RM) "main.d" "Args\Argument.d" "Args\ArgumentArray.d" "Args\TypeCode.d" "ModuleCommunications\Can.d" "ModuleCommunications\Comm.d" "ModuleCommunications\NetComm.d" "ModuleCommunications\NetReceive.d" "ModuleCommunications\Receive.d" "ModuleCommunications\Registration.d" "TransducerServices\Handler.d" "Util\Codec.d" "isotp\isotp.d" "isotp\isotp_user.d" 
 	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
 	-@echo 'Finished clean'
 	-@echo ' '

@@ -8,7 +8,7 @@
 #ifndef ARGS_ARGUMENTARRAY_H_
 #define ARGS_ARGUMENTARRAY_H_
 
-#include <String>
+#include <string>
 #include "Argument.h"
 #include <cstdint>
 #include <vector>

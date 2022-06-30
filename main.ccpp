@@ -1,0 +1,95 @@
+#include<cstdint>
+#include <cstdbool>
+#include <cstdio>
+
+#include<vector>
+#include <string>
+#include "Args/TimeDuration.h"
+#include "Args/TimeInstance.h"
+#include "Args/ArgumentArray.h"
+#include "Args/Argument.h"
+#include "Args/Types.h"
+
+#include "Util/Codec.h"
+
+#include "TransducerServices/Handler.h"
+
+/* Board Header file */
+//#include "Board.h"
+
+
+// ERROR ENCODING
+#define NO_ERROR 0
+#define INVALID_COMMID 1
+#define UNKNOWN_DESTID 2
+#define TIMEOUT 3
+#define NETWORK_FAILURE 4
+#define NETWORK_CORRUPTION 5
+#define MEMORY 6
+#define QOS_FAILURE 7
+#define MCAST_NOT_SUPPORTED 8
+#define UNKNOWN_GROUPID 9
+#define UNKNOWN_MODULEID 10
+#define UNKNOWN_MSGID 11
+#define NOT_GROUP_MEMBER 12
+#define ILLEGAL_MODE 13
+#define LOCKED_RESOURCE 14
+#define FATAL_TEDS_ERROR 15
+#define NON_FATAL_TEDS_ERROR  16
+#define CLOSE_ON_LOCKED_RESOURCE 17
+#define LOCK_BROKEN 18
+#define NETWORK_RESOURCE_EXCEEDED 19
+#define MEMORY_RESOURCE_EXCEEDED 20
+
+using namespace std;
+
+/**
+ * main.c
+ */
+
+
+
+Codec codec;
+Handler handler;
+
+
+
+
+
+
+
+//Task_Struct task0Struct,task1Struct;
+//Char task0Stack[TASKSTACKSIZE],task1Stack[TASKSTACKSIZE];
+//
+//
+//
+//
+//void CanTaskWrapper() {
+//    can0.commTask();
+//}
+
+
+//void clockHandler1(){
+//    //printf("Yielding\n");
+//    Task_yield();
+//}
+
+/*
+ *  ======== main ========
+ */
+int main()
+{
+    for(int i = 0 ; i< 100; i++){
+        ArgumentArray inArgs;
+        ArgumentArray outArgs;
+        UInt16 cmdClassId = 1;
+        Boolean hasResponse;
+        UInt16 cmdFunctionId =2;
+        handler.handleCommand(cmdClassId, cmdFunctionId, inArgs, hasResponse, outArgs);
+        OctetArray payload;
+        Boolean last = 1;
+        TimeDuration time{{1,0}};
+        //printf("outArgs size %d\n", outArgs.size());
+        codec.encodeResponse(1, outArgs, payload);
+        }
+}

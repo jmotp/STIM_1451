@@ -99,8 +99,8 @@ Codec codec;
 Handler handler;
 NetReceive netReceive;
 
-
 int mainTask(void){
+
 
     EK_TM4C123GXL_initGeneral();
 
@@ -122,6 +122,8 @@ int mainTask(void){
     //Argument argument2(Argument::Octet_Array_TC,&s);
     //argument2.print();
     System_flush();
+
+
 
 //    OctetArray test("");
 //    argument.putByName("Test",argument_send);
@@ -172,12 +174,10 @@ int mainTask(void){
 
 
 
-    StringArray stringArray;
-        argument.getNames(stringArray);
-        for(String out: stringArray){
-             System_printf("%s\n", out.c_str());
-             System_flush();
-        }
+//    ArgumentArray inArgs;
+//    ArgumentArray outArgs;
+//    Boolean hasResponse;
+//    handler.handleCommand(1, 2, inArgs, hasResponse, outArgs);
 
     extern uint32_t g_newMessage;
     while(1){
@@ -186,6 +186,7 @@ int mainTask(void){
         static Boolean buf_bool;
 
         if(netReceive.messageAvailable()){
+            printf("New message\n");
             MessageIncomingInfo message = netReceive.getMessageIncomingInfo();
             can0.readMsg(message.rcvCommId, TimeDuration{0,0},len , buffer, buf_bool);
             g_newMessage=0;

@@ -161,9 +161,12 @@ void Can::commTask(){
             swapByteOrder(msgId);
             buffer.msgId = msgId;
             printf("msgId @Reception %x\n",msgId);
-            CanReceiveArray.insert( CanReceiveArray.begin()+nextCommId,buffer);
-            netReceive->notifyMsg(nextCommId,msgId!=0,buffer.message.size(),0,0,0);
 
+            printf("msgId @Reception %x\n",nextCommId);
+
+            CanReceiveArray.insert(std::pair<int,CanMessage>(nextCommId,buffer));
+            netReceive->notifyMsg(nextCommId,msgId!=0,buffer.message.size(),0,0,0);
+            printf("msgId @Reception %x\n",msgId);
             nextCommId++;
 
 
@@ -231,6 +234,7 @@ UInt16 Can::writeRsp(UInt16 commId, TimeDuration timeout, OctetArray payload,  B
     uint32_t time = millis;
     while(millis-time < timeout.timeRepresentation.Secs*1000){
         UInt16 msgId = CanReceiveArray[commId].msgId;
+        CanReceiveArray.erase(CanReceiveArray.find(commId));
         printf("%x\n",msgId);
         swapByteOrder(msgId);
         printf("%x\n",msgId);

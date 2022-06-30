@@ -22,10 +22,6 @@ ArgumentArray::ArgumentArray()
 
 ArgumentArray::~ArgumentArray()
 {
-//    //for(tuple<String, Argument> &arg: argumentArray){
-//       Argument argument = get<1>(arg);
-//       delete &argument;
-//   }
 }
 
 ArgumentArray::ArgumentArray(const ArgumentArray& argumentArray){

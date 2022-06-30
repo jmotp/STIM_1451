@@ -23,7 +23,7 @@ NetReceive::~NetReceive()
 UInt16 NetReceive::notifyMsg( UInt16 rcvCommId, Boolean twoWay, UInt32 payloadLen,UInt32 cacheLen, UInt16 maxPayloadLen, UInt16 status){
     MessageIncomingInfo message = {rcvCommId,twoWay,payloadLen,cacheLen,maxPayloadLen,status};
     messageQueue.push(message);
-    //printf("Added one message\n");
+    printf("Added one message\n");
     //printf("Queue size: %d\n", messageQueue.size());
     return 0;
 }
