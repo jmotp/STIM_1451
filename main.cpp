@@ -1,5 +1,6 @@
 #include<cstdint>
 #include <cstdbool>
+#include <cstdio>
 
 #include<vector>
 #include <String>
@@ -8,8 +9,7 @@
 #include "Args/ArgumentArray.h"
 #include "Args/Argument.h"
 
-#define ISOTP_BYTE_ORDER_LITTLE_ENDIAN
-
+#include <config.h>
 #define xdc_nolocalstring
 extern "C"{
 #include <xdc/std.h>
@@ -26,11 +26,9 @@ extern "C"{
 
 #include "driverlib/systick.h"
 
-
 #include"EK_TM4C123GXL.h"
 
 #include "ModuleCommunications/Comm.h"
-
 #include "ModuleCommunications/Can.h"
 
 #include "isotp/isotp_user.h"
@@ -42,15 +40,15 @@ extern "C"{
 
 #include <ti/sysbios/knl/Clock.h>
 
+#include <TransducerServices/Handler.h>
+
+#include <xdc/runtime/Error.h>
 
 
-
-/* BIOS Header files */
+///* BIOS Header files */
 #include <ti/sysbios/BIOS.h>
 #include <ti/sysbios/knl/Task.h>
 #include <driverlib/EEPROM.h>
-
-#define TASKSTACKSIZE 2048
 
 
 /* TI-RTOS Header files */
@@ -91,37 +89,16 @@ extern "C"{
 
 using namespace std;
 
-/*namespace IEEE1451Dot0{
-    namespace Args{
-       typedef std::vector<int8_t> Int8Array;
-       typedef std::vector<int16_t> Int16Array;
-       typedef std::vector<int32_t> Int32Array;
-       typedef std::vector<uint8_t> UInt8Array;
-       typedef std::vector<uint16_t> UInt16Array;
-       typedef std::vector<uint32_t> UInt32Array;
-       typedef std::vector<float> Float32Array;
-       typedef std::vector<double> Float64Array;
-       typedef std::vector<string> StringArray;
-       typedef std::vector<char> OctetArray;
-       typedef std::vector<bool> BooleanArray;
-       typedef std::vector<TimeInstance> TimeInstanceArray;
-       typedef std::vector<TimeDuration> TimeDurationArray;
-
-
-
-    }
-}
-
-*/
-
-
-
 /**
  * main.c
  */
 
 
 Can can0;
+Codec codec;
+Handler handler;
+NetReceive netReceive;
+
 
 int mainTask(void){
 
@@ -129,25 +106,69 @@ int mainTask(void){
 
     //initComms();
 
+
+
     ArgumentArray argument;
     UInt32 integer= 33;
     System_printf("Beggining...\n");
-    Argument argument_send(Argument::UInt32_TC , &integer) ;
-    System_printf("Before putByName: %u \n",argument_send._valueUInt32);
+    //Argument argument_send(Argument::UInt32_TC , &integer) ;
+    //System_printf("Before putByName: %u \n",argument_send._valueUInt32);
 
 
 
     System_flush();
     String s = "hello\n";
 
-    Argument argument2(Argument::Octet_Array_TC,&s);
-    argument2.print();
+    //Argument argument2(Argument::Octet_Array_TC,&s);
+    //argument2.print();
     System_flush();
 
-    OctetArray test("");
-    argument.putByName("Test",argument_send);
-    argument_send.print();
-    argumentArray2OctetArray(argument,test);
+//    OctetArray test("");
+//    argument.putByName("Test",argument_send);
+//    argument_send.print();
+//    codec.argumentArray2OctetArray(argument,test);
+//    OctetArray payload;
+//    codec.encodeResponse(1, argument, payload);
+//    ArgumentArray inArgs;
+//    Boolean hasResponse;
+//    ArgumentArray outArgs;
+//    Argument arg2;
+//    handler.handleCommand(1, 2, inArgs, hasResponse, outArgs);
+//    outArgs.getByIndex(0,arg2);
+//    arg2.print();
+//    System_printf("outArgs size %d\n", outArgs.size());
+
+//    Int16 channelId;
+//    UInt8 cmdFunctionId;
+//    UInt8 cmdClassId;
+//    ArgumentArray inArgs;
+//    ArgumentArray outArgs;
+//    printf("outArgs address %p outArgs size %d\n",&outArgs, outArgs.size());
+//    Boolean hasResponse =0;
+//    handler.handleCommand(1, 2, inArgs, hasResponse, outArgs);
+//    printf("Has Response: %d\n", hasResponse);
+//
+//    if(hasResponse){
+//        OctetArray payload;
+//        UInt16 commId = 1;
+//        Boolean last = 1;
+//        TimeDuration time{{1,0}};
+//        codec.encodeResponse(1, outArgs, payload);
+//        can0.writeRsp(commId, time, payload, last);
+//    }
+
+
+//    printf("Before getIndex\n");
+//    //outArgs.putByIndex(0,argument2);
+//    printf("outArgs address %p outArgs size %d \n", &outArgs,outArgs.size());
+//    printf("outArgs size %d\n", outArgs.size());
+//
+//    printf("outArgs size %d\n", outArgs.size());
+//    Argument arg;
+//    outArgs.getByIndex(0, arg);
+//
+//    arg.print();
+//    outArgs.getByIndex(0, arg);
 
 
 
@@ -160,28 +181,56 @@ int mainTask(void){
 
     extern uint32_t g_newMessage;
     while(1){
-        static OctetArray buffer;
+        OctetArray buffer("");
         static uint32_t len;
         static Boolean buf_bool;
-        if(g_newMessage){
-            can0.readMsg(0, TimeDuration{0,0},len , buffer, buf_bool);
-               g_newMessage=0;
-            System_printf("String: %s\n", buffer.c_str());
+
+        if(netReceive.messageAvailable()){
+            MessageIncomingInfo message = netReceive.getMessageIncomingInfo();
+            can0.readMsg(message.rcvCommId, TimeDuration{0,0},len , buffer, buf_bool);
+            g_newMessage=0;
+            UInt16 channelId;
+            UInt8 cmdFunctionId;
+            UInt8 cmdClassId;
+            ArgumentArray inArgs;
+            codec.decodeCommand(buffer, channelId, cmdClassId, cmdFunctionId, inArgs);
+            printf("Command: Channel %d Cmd %d Function %d\n",channelId,cmdClassId,cmdFunctionId);
+
+            ArgumentArray outArgs;
+            //printf("outArgs address %d outArgs size %d\n",outArgs, outArgs.size());
+            Boolean hasResponse =0;
+            handler.handleCommand(cmdClassId, cmdFunctionId, inArgs, hasResponse, outArgs);
+
+            //printf("Before getIndex\n");
+            //outArgs.putByIndex(0,argument2);
+            //printf("outArgs address %d outArgs size %d\n",outArgs, outArgs.size());
+            //Argument arg;
+            //printf("outArgs size %d\n", outArgs.size());
+            //outArgs.getByIndex(0, arg);
+            //printf("Arg Type: %d", arg.type);
+            //printf("Has Response: %d\n", hasResponse);
+            if(hasResponse){
+                OctetArray payload;
+                Boolean last = 1;
+                TimeDuration time{{1,0}};
+                //printf("outArgs size %d\n", outArgs.size());
+                codec.encodeResponse(1, outArgs, payload);
+                can0.writeRsp(message.rcvCommId, time, payload, last);
+            }
             System_flush();
 
         }
+
+
         Task_yield();
-
-
-
     }
 
 
 
 
 
-    Argument argument_save;
-    argument.getByIndex(0,argument_save);
+    //Argument argument_save;
+    //argument.getByIndex(0,argument_save);
     return 0;
 
 }
@@ -196,13 +245,29 @@ void CanTaskWrapper() {
     can0.commTask();
 }
 
+
+void clockHandler1(){
+    //printf("Yielding\n");
+    Task_yield();
+}
+
 /*
  *  ======== main ========
  */
 Int main()
 {
+    Error_Block eb;
 
-    Clock_tickStart();
+
+    Clock_Params clockParams;
+    Clock_Params_init(&clockParams);
+     clockParams.period = 1000;/* every 4 Clock ticks */
+     clockParams.startFlag = TRUE;/* start immediately */
+     Clock_Handle myClk0 = Clock_create((Clock_FuncPtr)clockHandler1, 4, &clockParams, &eb);
+     if (myClk0 == NULL) {
+     System_abort("Clock0 create failed");
+     }
+     Clock_tickStart();
     /* Construct BIOS objects */
     Task_Params taskParams,taskParams1;
 
@@ -211,19 +276,20 @@ Int main()
     taskParams.stackSize = TASKSTACKSIZE;
     taskParams.stack = &task0Stack;
     taskParams.priority = 1;
-    Task_construct(&task0Struct, (Task_FuncPtr)mainTask, &taskParams, NULL);
-
+    Task_construct(&task0Struct, (Task_FuncPtr)mainTask, &taskParams, &eb);
 
     can0.init();
 
+    can0.registerNetReceive(&netReceive);
 
-
-    /* Construct clock Task thread */
     Task_Params_init(&taskParams1);
     taskParams1.stackSize = TASKSTACKSIZE;
     taskParams1.stack = &task1Stack;
     taskParams1.priority = 1;
-    Task_construct(&task1Struct, (Task_FuncPtr)CanTaskWrapper, &taskParams1, NULL);
+
+    Task_construct(&task1Struct, (Task_FuncPtr)CanTaskWrapper, &taskParams1, &eb);
+
+
 
     BIOS_start();
 

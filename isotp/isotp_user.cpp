@@ -30,7 +30,7 @@ extern "C"{
 
 
 
-
+#include <ti/sysbios/knl/Task.h>
 uint32_t millis=0;
 
 void SycTickInt(){
@@ -62,8 +62,9 @@ void isotp_user_debug(const char* message){
 extern Can can0;
 int  isotp_user_send_can(const uint32_t arbitration_id,
                          const uint8_t* data, const uint8_t size){
-    System_printf("Message Sent to id %l\n", arbitration_id);
-    System_flush();
+//    System_printf("Message Sent to id %l\n", arbitration_id);
+//    System_flush();
+
     can0.sendMessage(arbitration_id, data, size);
     return ISOTP_RET_OK;
 }

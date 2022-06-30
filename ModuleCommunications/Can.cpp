@@ -6,9 +6,8 @@
  */
 
 #include <ModuleCommunications/Can.h>
+#include <cstdio>
 
-    #include <isotp/isotp.h>
-#include <ti/sysbios/knl/Task.h>
 
 
 uint32_t g_ui32MsgCount = 0;
@@ -61,8 +60,6 @@ Can::~Can()
 
 UInt16 Can::init(){
 
-    //System_printf("Can initiated\n");
-    //System_flush();
 
     SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ | SYSCTL_OSC_MAIN);
 
@@ -97,8 +94,9 @@ UInt16 Can::init(){
     msgSend.ui32MsgLen = 8; // allow up to 8 bytes
     msgSend.pui8MsgData = msgSendData;
 
-    isotp_init_link(&g_link, 0x18daaa55, g_isotpSendBuf, sizeof(g_isotpSendBuf), g_isotpRecvBuf, sizeof(g_isotpRecvBuf));
+    isotp_init_link(&g_link, 0x18da0102, g_isotpSendBuf, sizeof(g_isotpSendBuf), g_isotpRecvBuf, sizeof(g_isotpRecvBuf));
 
+    /* Construct clock Task thread */
 
     return 0;
 }
@@ -108,21 +106,19 @@ UInt16 Can::init(){
 void Can::commTask(){
     SysTickbegin();
     CANMessageSet(CAN0_BASE, 1, &msgReceive, MSG_OBJ_TYPE_RX);
-    //System_printf("Can running\n");
-    //System_flush();
+    CANMessageSet(CAN0_BASE, 2, &msgSend, MSG_OBJ_TYPE_TX);
 
-    uint16_t out_size;
     uint32_t ret;
     while(true){
         //System_printf("Can running\n");
-        //System_flush();
+        System_flush();
         if(g_clrToSend && g_sendFlag){
-            System_printf("Message Sent to id %d\n", msgSend.ui32MsgID);
-            for(int i = 0 ; i < 8;i++){
-                    System_printf("%x ",msgSendData[i]);
-            }
-            System_printf("\n");
-            System_flush();
+//            printf("Message Sent to id %d\n", msgSend.ui32MsgID);
+//            for(int i = 0 ; i < 8;i++){
+//                    printf("%x ",msgSendData[i]);
+//            }
+//            printf("\n");
+//            System_flush();
             CANMessageSet(CAN0_BASE, 2, &msgSend, MSG_OBJ_TYPE_TX); // send as msg object 2
 
             g_sendFlag=0;
@@ -133,12 +129,12 @@ void Can::commTask(){
         if(g_ui32MsgCount==1){
 
             CANMessageGet(CAN0_BASE, 1, &msgReceive, 0); // receive as msg object 1
-            System_printf("Received_byte\n");
-            for(int i = 0 ; i < 8;i++){
-                    System_printf("%x ",msgReceiveData[i]);
-            }
-            System_printf("\n");
-            System_flush();
+//            printf("Received_byte\n");
+//            for(int i = 0 ; i < 8;i++){
+//                    printf("%x ",msgReceiveData[i]);
+//            }
+//            printf("\n");
+//            System_flush();
             isotp_on_can_message(&g_link, msgReceiveData, msgReceive.ui32MsgLen);
 
 
@@ -151,12 +147,29 @@ void Can::commTask(){
 
         isotp_poll(&g_link);
 
-        ret = isotp_receive(&g_link, (uint8_t*) receiveBuffer, 512, &out_size);
+
+
+        ret = isotp_receive(&g_link, (uint8_t*) receiveBuffer, 512, &receiveSize);
         if(ISOTP_RET_OK == ret){
-            g_newMessage = 1;
-            System_printf("Message acquired\n");
-            System_flush();
+
+            CanMessage buffer;
+
+            buffer.message = string((const char*)receiveBuffer+2,(size_t)receiveSize-2);
+            //buffer.destId = msgReceive.ui32MsgID;
+            UInt16 msgId;
+            memcpy((void *)&msgId,receiveBuffer,2);
+            swapByteOrder(msgId);
+            buffer.msgId = msgId;
+            printf("msgId @Reception %x\n",msgId);
+            CanReceiveArray.insert( CanReceiveArray.begin()+nextCommId,buffer);
+            netReceive->notifyMsg(nextCommId,msgId!=0,buffer.message.size(),0,0,0);
+
+            nextCommId++;
+
+
         }
+
+
 
         Task_yield();
     }
@@ -168,15 +181,18 @@ UInt16 Can::sendMessage(const uint32_t arbitration_id, const uint8_t* data, cons
     memcpy(msgSendData,data,size * sizeof(char));
     msgSend.ui32MsgID = arbitration_id;
     g_sendFlag=1;
+    Task_yield();
+    while(!g_clrToSend);
     return ISOTP_RET_OK;
 }
 
 UInt16 Can::readMsg( UInt16 commId, TimeDuration timeout, UInt32& len, OctetArray& payload, Boolean& last){
-    len = receiveSize;
-    payload = string((const char *)receiveBuffer,(size_t)receiveSize);
-
+    payload = CanReceiveArray[commId].message;
+    last = 0;
+    len = payload.size();
     return 0;
 }
+
 
 
 UInt16 Can::shutdown(){}
@@ -190,7 +206,9 @@ UInt16 Can::describe( UInt8& logicalType, UInt8& physicalType, String& name){}
 UInt16 Can::writeMsg(UInt16 commId, TimeDuration timeout, OctetArray payload, Boolean last, UInt16 msgId){
     extern uint32_t millis;
     uint32_t time = millis;
+
     while(millis-time < timeout.timeRepresentation.Secs/1000){
+
         UInt32 ret =  isotp_send(&g_link,(uint8_t* )payload.c_str(),payload.size());
         if (ISOTP_RET_OK == ret) {
             break;
@@ -202,7 +220,53 @@ UInt16 Can::writeMsg(UInt16 commId, TimeDuration timeout, OctetArray payload, Bo
 
 }
 
-UInt16 Can::open( UInt16 destId, Boolean twoWay, UInt16& maxPayloadLen, UInt16& commId){
+UInt16 Can::writeRsp(UInt16 commId, TimeDuration timeout, OctetArray payload,  Boolean last){
 
+    CanMessage canMessage;
+    canMessage.destId = commId;
+    canMessage.message = payload;
+    //canMessage.size = payload.size();
+    CanQueueSend.push(canMessage);
+    extern uint32_t millis;
+    uint32_t time = millis;
+    while(millis-time < timeout.timeRepresentation.Secs*1000){
+        UInt16 msgId = CanReceiveArray[commId].msgId;
+        printf("%x\n",msgId);
+        swapByteOrder(msgId);
+        printf("%x\n",msgId);
+        payload.insert(0,(const char *)&msgId,2);
+        //payload.insert(payload.begin(),(char)1);
+        //payload.insert(payload.begin(),(char)0);
+
+        UInt32 ret =  isotp_send(&g_link,(uint8_t* )payload.c_str(),payload.size());
+        System_printf("WriteRsp\n");
+        System_flush();
+        if (ISOTP_RET_OK == ret) {
+            break;
+        }
+    }
+
+
+    return 0;
 }
 
+
+UInt16 Can::open( UInt16 destId, Boolean twoWay, UInt16& maxPayloadLen, UInt16& commId){}
+
+UInt16 Can::openQoS( UInt16 destId, Boolean twoWay, UInt16& maxPayloadLen, UInt16& commId, QosParams& qosParams){}
+UInt16 Can::close( UInt16 commId){}
+
+UInt16 Can::flush( UInt16 commId){}
+    UInt16 Can::readSize( UInt16 commId, UInt32& cacheSize){}
+    UInt16 Can::setPayloadSize( UInt16 commId, UInt32 size){}
+    UInt16 Can::abort(UInt16 commId){}
+    UInt16 Can::commStatus(UInt16 commId, UInt16 msgId, UInt16& statusCode ){}
+    UInt16 Can::discoverDestinations(){}
+    UInt16 Can::joinGroup( UInt16 groupId, UInt16 destId){}
+    UInt16 Can::leaveGroup( UInt16 groupId, UInt16 destId){}
+    UInt16 Can::lookupDestId( UInt16 commId, UInt16& destId){}
+    UInt16 Can::setRemoteConfiguration( UInt16 commId, TimeDuration timeout, ArgumentArray params){}
+    UInt16 Can::getRemoteConfiguration( UInt16 commId, TimeDuration timeout, ArgumentArray& params){}
+    UInt16 Can::sendRemoteCommand(UInt16 commId, TimeDuration timeout, UInt8 cmdClassId, UInt8 cmdFunctionId, ArgumentArray inArgs, ArgumentArray& outArgs){}
+
+    UInt16 Can::readRsp(UInt16 commId, TimeDuration timeout, UInt16 msgId, UInt32 maxLen, OctetArray& payload, Boolean& last){}

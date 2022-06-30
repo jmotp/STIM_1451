@@ -16,6 +16,13 @@
 #include "Types.h"
 #include <string>
 #include <sstream>
+#include <variant>
+
+#define xdc__nolocalstring
+extern "C" {
+    #include <xdc/std.h>
+    #include <xdc/runtime/System.h>
+}
 
 
 
@@ -70,6 +77,8 @@ class Argument{
              Octet_Array_TC, Boolean_Array_TC,
             Time_Instance_Array_TC, Time_Duration_Array_TC
             } type;
+
+
     union{
            Boolean _valueError;
            UInt8 _valueUInt8;
@@ -119,6 +128,9 @@ class Argument{
 
 
 };
+
+void swapByteOrder(uint16_t& us);
+
 
 void reverseStr(string& str);
 

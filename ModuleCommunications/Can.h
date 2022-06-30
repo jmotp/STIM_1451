@@ -12,10 +12,11 @@
 
     #include <isotp/isotp.h>
 
-
-
-#define ISOTP_BUFSIZE 4096
-
+#include <ti/sysbios/knl/Task.h>
+#include <queue>
+#include <vector>
+#include <isotp/isotp.h>
+#include <config.h>
 
 /* Alloc IsoTpLink statically in RAM */
     static IsoTpLink g_link;
@@ -25,7 +26,14 @@
     static uint8_t g_isotpSendBuf[ISOTP_BUFSIZE];
 
 
-class Can : Comm
+typedef struct CanMessage_t{
+        UInt16 msgId;
+        UInt16 destId;
+        OctetArray message;
+  }CanMessage;
+
+
+class Can : public NetComm
 {
 public:
 
@@ -48,6 +56,7 @@ public:
     UInt16 openQoS( UInt16 destId, Boolean twoWay, UInt16& maxPayloadLen, UInt16& commId, QosParams& qosParams);
     UInt16 close( UInt16 commId);
     UInt16 readMsg( UInt16 commId, TimeDuration timeout, UInt32& len, OctetArray& payload, Boolean& last);
+
     UInt16 readRsp(UInt16 commId, TimeDuration timeout, UInt16 msgId, UInt32 maxLen, OctetArray& payload, Boolean& last);
     UInt16 writeMsg(UInt16 commId, TimeDuration timeout, OctetArray payload,  Boolean last, UInt16 msgId);
     UInt16 writeRsp(UInt16 commId, TimeDuration timeout, OctetArray payload,  Boolean last);
@@ -56,7 +65,7 @@ public:
     UInt16 setPayloadSize( UInt16 commId, UInt32 size);
     UInt16 abort(UInt16 commId);
     UInt16 commStatus(UInt16 commId, UInt16 msgId, UInt16& statusCode );
-    UInt16 discoverDestinations( );
+    UInt16 discoverDestinations();
     UInt16 joinGroup( UInt16 groupId, UInt16 destId);
     UInt16 leaveGroup( UInt16 groupId, UInt16 destId);
     UInt16 lookupDestId( UInt16 commId, UInt16& destId);
@@ -64,21 +73,31 @@ public:
     UInt16 getRemoteConfiguration( UInt16 commId, TimeDuration timeout, ArgumentArray& params);
     UInt16 sendRemoteCommand(UInt16 commId, TimeDuration timeout, UInt8 cmdClassId, UInt8 cmdFunctionId, ArgumentArray inArgs, ArgumentArray& outArgs);
 
+   // virtual UInt16 registerNetReceive(NetReceive &netReceive);
+
+
 
 private:
+    //NetReceive netReceive;
 
     //the CAN RECEIVE message Object
     tCANMsgObject msgReceive;
     unsigned char msgReceiveData[8];
     
+    std::queue<CanMessage> CanQueueSend;
+
+    std::vector<CanMessage> CanReceiveArray;
+
     //the CAN SEND message Object
     tCANMsgObject msgSend;
     unsigned char msgSendData[8];
 
     unsigned char sendBuffer[512];
     unsigned char receiveBuffer[512];
-    UInt32 receiveSize;
+    UInt16 receiveSize;
     UInt32 sendSize;
+
+    UInt16 nextCommId=0;
 
 
     void delay(unsigned int milliseconds) {

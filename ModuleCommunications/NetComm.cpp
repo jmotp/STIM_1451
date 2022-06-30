@@ -10,6 +10,7 @@
 
 NetComm::NetComm()
 {
+
     // TODO Auto-generated constructor stub
 
 }
@@ -19,3 +20,6 @@ NetComm::~NetComm()
     // TODO Auto-generated destructor stub
 }
 
+UInt16 NetComm::registerNetReceive(NetReceive *netReceive){
+    this->netReceive = netReceive;
+}

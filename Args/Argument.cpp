@@ -6,11 +6,8 @@
  */
 
 #include "Args/Argument.h"
-#define xdc__nolocalstring
-extern "C" {
-#include <xdc/std.h>
-#include <xdc/runtime/System.h>
-}
+#include <cstdio>
+#include <variant>
 
 void swapByteOrder(uint16_t& us)
 {
@@ -78,6 +75,7 @@ Argument::Argument(TypeCode _type, void * value_ref){
 
 
 Argument& Argument::operator= (const Argument& argument){
+
     this->type = argument.type;
 
     switch(argument.type){
@@ -91,7 +89,10 @@ Argument& Argument::operator= (const Argument& argument){
             this->_valueUInt32 = argument._valueUInt32;
             break;
         case Octet_Array_TC:
-            this->_valueOctetArray = argument._valueOctetArray;
+//            System_printf("String Pointer: %d\n", argument._valueOctetArray);
+//            System_flush();
+
+            new(&this->_valueOctetArray) string(argument._valueOctetArray);
         }
 
     return *this;
@@ -110,7 +111,7 @@ UInt16 Argument::print(){
                 System_printf("Argument long %u\n", this->_valueUInt32);
                 break;
             case Octet_Array_TC:
-                System_printf("Argument %s", this->_valueOctetArray.c_str());
+                System_printf("Argument %s\n", this->_valueOctetArray.c_str());
                 break;
     }
     System_flush();
@@ -140,51 +141,62 @@ UInt16 Argument::toString(String& result){
 
 UInt16 Argument::write(stringstream& ss){
     uint8_t size;
-    string s("");
-
+    uint16_t arg_size;
+    ss.write((const char*)&type,sizeof(uint8_t));
     switch(this->type){
+        
                     case UInt8_TC:
-                        size=1;
-                        ss.write((const char*)&size,sizeof(uint8_t));
                         ss.write((const char*)&(this->_valueUInt8),sizeof(uint8_t));
                         break;
                     case UInt16_TC:
                         uint16_t buffer_ = this->_valueUInt16;
                         swapByteOrder(buffer_);
                         size=2;
-                        ss.write((const char*)&size,sizeof(uint8_t));
                         ss.write((const char*)&(buffer_),sizeof(uint8_t));
                         break;
                     case UInt32_TC:
+
+
                         uint32_t buffer = this->_valueUInt32;
                         swapByteOrder(buffer);
                         size=4;
-                        ss.write((const char*)&size,sizeof(uint8_t));
+                        arg_size = 4;
+                        swapByteOrder(arg_size);
+                        ss.write((const char*)(&arg_size),2);
                         ss.write((const char*)&(buffer),sizeof(uint32_t));
                         break;
                     case Octet_Array_TC:
                         size = this->_valueOctetArray.size();
-                        ss.write((const char*)&(this->_valueOctetArray),size*sizeof(char));
-                        ss.write((const char*)&size,sizeof(uint8_t));
+//                        System_printf("Size: %d\n", size);
+//                        System_flush();
+                        arg_size=size;
+                        swapByteOrder(arg_size);
+                        ss.write((const char*)(&arg_size),2);
+                        ss.write((const char*)(this->_valueOctetArray.data()),size);
                         break;
             }
-            System_flush();
             return 0;
 
 }
 
 
-Argument::Argument(const Argument & arg): type(arg.type)
+Argument::Argument(const Argument & arg)
 {
-    switch(arg.type){
-
-            case Octet_Array_TC: new(&this->_valueOctetArray) string("");
-          }
+    this->type = arg.type;
+    switch(this->type){
+        case UInt32_TC: this->_valueUInt32 = arg._valueUInt32;
+        break;
+        case Octet_Array_TC: new(&this->_valueOctetArray) string(arg._valueOctetArray);
+     }
     // TODO Auto-generated constructor stub
 
 };
 
 Argument::~Argument()
 {
+    switch(type){
+           this->print();
+           case Octet_Array_TC: delete(((string*)&(this->_valueOctetArray)));
+        }
     // TODO Auto-generated destructor stub
 };
