@@ -1,0 +1,18 @@
+Release/
+src/
+Debug/
+.config/
+.settings/
+.launches/
+.project
+.cproject
+.ccsproject
+.vscode/settings.json
+.xdchelp
+empty.d
+main.dcpp
+empty_readme.txt
+makefile.defs
+targetConfigs/readme.txt
+targetConfigs/Tiva TM4C123GH6PM.ccxml
+tm4c123gh6pm.cmd
