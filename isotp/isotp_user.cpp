@@ -40,7 +40,7 @@ void SycTickInt(){
 }
 
 void SysTickbegin(){
-    uint32_t F_CPU = 50000;
+    uint32_t F_CPU = 80000;
     SysTickPeriodSet(F_CPU);
     SysTickIntRegister(SycTickInt);
     SysTickIntEnable();

@@ -104,80 +104,11 @@ int mainTask(void){
 
     EK_TM4C123GXL_initGeneral();
 
-    //initComms();
 
 
 
-    ArgumentArray argument;
-    UInt32 integer= 33;
+
     System_printf("Beggining...\n");
-    //Argument argument_send(Argument::UInt32_TC , &integer) ;
-    //System_printf("Before putByName: %u \n",argument_send._valueUInt32);
-
-
-
-    System_flush();
-    String s = "hello\n";
-
-    //Argument argument2(Argument::Octet_Array_TC,&s);
-    //argument2.print();
-    System_flush();
-
-
-
-//    OctetArray test("");
-//    argument.putByName("Test",argument_send);
-//    argument_send.print();
-//    codec.argumentArray2OctetArray(argument,test);
-//    OctetArray payload;
-//    codec.encodeResponse(1, argument, payload);
-//    ArgumentArray inArgs;
-//    Boolean hasResponse;
-//    ArgumentArray outArgs;
-//    Argument arg2;
-//    handler.handleCommand(1, 2, inArgs, hasResponse, outArgs);
-//    outArgs.getByIndex(0,arg2);
-//    arg2.print();
-//    System_printf("outArgs size %d\n", outArgs.size());
-
-//    Int16 channelId;
-//    UInt8 cmdFunctionId;
-//    UInt8 cmdClassId;
-//    ArgumentArray inArgs;
-//    ArgumentArray outArgs;
-//    printf("outArgs address %p outArgs size %d\n",&outArgs, outArgs.size());
-//    Boolean hasResponse =0;
-//    handler.handleCommand(1, 2, inArgs, hasResponse, outArgs);
-//    printf("Has Response: %d\n", hasResponse);
-//
-//    if(hasResponse){
-//        OctetArray payload;
-//        UInt16 commId = 1;
-//        Boolean last = 1;
-//        TimeDuration time{{1,0}};
-//        codec.encodeResponse(1, outArgs, payload);
-//        can0.writeRsp(commId, time, payload, last);
-//    }
-
-
-//    printf("Before getIndex\n");
-//    //outArgs.putByIndex(0,argument2);
-//    printf("outArgs address %p outArgs size %d \n", &outArgs,outArgs.size());
-//    printf("outArgs size %d\n", outArgs.size());
-//
-//    printf("outArgs size %d\n", outArgs.size());
-//    Argument arg;
-//    outArgs.getByIndex(0, arg);
-//
-//    arg.print();
-//    outArgs.getByIndex(0, arg);
-
-
-
-//    ArgumentArray inArgs;
-//    ArgumentArray outArgs;
-//    Boolean hasResponse;
-//    handler.handleCommand(1, 2, inArgs, hasResponse, outArgs);
 
     extern uint32_t g_newMessage;
     while(1){
@@ -186,7 +117,6 @@ int mainTask(void){
         static Boolean buf_bool;
 
         if(netReceive.messageAvailable()){
-            printf("New message\n");
             MessageIncomingInfo message = netReceive.getMessageIncomingInfo();
             can0.readMsg(message.rcvCommId, TimeDuration{0,0},len , buffer, buf_bool);
             g_newMessage=0;
@@ -195,30 +125,19 @@ int mainTask(void){
             UInt8 cmdClassId;
             ArgumentArray inArgs;
             codec.decodeCommand(buffer, channelId, cmdClassId, cmdFunctionId, inArgs);
-            printf("Command: Channel %d Cmd %d Function %d\n",channelId,cmdClassId,cmdFunctionId);
-
+            //printf("Command: Channel %d Cmd %d Function %d\n",channelId,cmdClassId,cmdFunctionId);
             ArgumentArray outArgs;
-            //printf("outArgs address %d outArgs size %d\n",outArgs, outArgs.size());
             Boolean hasResponse =0;
             handler.handleCommand(cmdClassId, cmdFunctionId, inArgs, hasResponse, outArgs);
 
-            //printf("Before getIndex\n");
-            //outArgs.putByIndex(0,argument2);
-            //printf("outArgs address %d outArgs size %d\n",outArgs, outArgs.size());
-            //Argument arg;
-            //printf("outArgs size %d\n", outArgs.size());
-            //outArgs.getByIndex(0, arg);
-            //printf("Arg Type: %d", arg.type);
-            //printf("Has Response: %d\n", hasResponse);
             if(hasResponse){
                 OctetArray payload;
                 Boolean last = 1;
                 TimeDuration time{{1,0}};
-                //printf("outArgs size %d\n", outArgs.size());
                 codec.encodeResponse(1, outArgs, payload);
                 can0.writeRsp(message.rcvCommId, time, payload, last);
             }
-            System_flush();
+//            System_flush();
 
         }
 
@@ -262,7 +181,7 @@ Int main()
 
     Clock_Params clockParams;
     Clock_Params_init(&clockParams);
-     clockParams.period = 1000;/* every 4 Clock ticks */
+     clockParams.period = 20;/* every 4 Clock ticks */
      clockParams.startFlag = TRUE;/* start immediately */
      Clock_Handle myClk0 = Clock_create((Clock_FuncPtr)clockHandler1, 4, &clockParams, &eb);
      if (myClk0 == NULL) {

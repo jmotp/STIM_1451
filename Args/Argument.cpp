@@ -50,7 +50,7 @@ enum TypeCode{
 
 Argument::Argument(TypeCode _type, void* value_ref){
     type = _type;
-    printf("Created argument of type %d\n", _type);
+//    \\printf("Created argument of type %d\n", _type);
 
     switch(type){
         case UInt8_TC:
@@ -62,15 +62,15 @@ Argument::Argument(TypeCode _type, void* value_ref){
 
         case Octet_Array_TC:
 
-            fprintf(stdout,"%s",((string)*(string*)(value_ref)).c_str());
-            fflush(stdout);
+//            fprintf(stdout,"%s",((string)*(string*)(value_ref)).c_str());
+//            fflush(stdout);
             new(&this->_valueOctetArray) string(*((string*)value_ref));
             //printf("String pointer %p\n", _valueOctetArray);
 
             break;
         }
 
-    this->print();
+    //this->print();
 
 
 
@@ -81,9 +81,9 @@ Argument::Argument(TypeCode _type, void* value_ref){
 Argument& Argument::operator= (const Argument& argument){
 
     this->type = argument.type;
-    printf("Copying Argument of type %d via =\n", type);
+//    \\printf("Copying Argument of type %d via =\n", type);
 
-    printf("Here?\n");
+//    \\printf("Here?\n");
     switch(argument.type){
         case UInt8_TC:
             this->_valueUInt8 = argument._valueUInt8;
@@ -191,7 +191,7 @@ Argument::Argument(const Argument & arg)
 {
 
     this->type = arg.type;
-    printf("Copying Argument of type %d\n", type);
+//    \\printf("Copying Argument of type %d\n", type);
     switch(this->type){
         case UInt32_TC: this->_valueUInt32 = arg._valueUInt32;
         break;
@@ -204,10 +204,10 @@ Argument::Argument(const Argument & arg)
 
 Argument::~Argument()
 {
-    printf("Destructing Argument of type %d\n", type);
+//    printf("Destructing Argument of type %d\n", type);
 
     switch(type){
-           this->print();
+//           this->print();
            case Octet_Array_TC:
                //printf("String pointer %p\n", _valueOctetArray);
                _valueOctetArray.~string();

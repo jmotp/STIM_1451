@@ -33,8 +33,8 @@ UInt16 Handler::handleCommand(UInt8 cmdClassId,UInt8 cmdFunctionId,ArgumentArray
             outArgs.putByIndex(0, Argument(Argument::UInt32_TC,(void*)&offset));
             outArgs.putByIndex(1, Argument(Argument::Octet_Array_TC, (void *)&TEDS));
 
-            fprintf(stdout,"outArgs size: %d\n", outArgs.size());
-            fflush(stdout);
+//            fprintf(stdout,"outArgs size: %d\n", outArgs.size());
+//            fflush(stdout);
 
 
 

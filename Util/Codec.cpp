@@ -29,18 +29,18 @@ UInt16 Codec::encodeResponse(Boolean successFlag,ArgumentArray& outArgs, OctetAr
     OctetArray buffer;
     sstream.write((const char*)&successFlag,1);
     argumentArray2OctetArray(outArgs,buffer);
-    fprintf(stdout,"Octet Array size: %d\n", buffer.size());
+//    fprintf(stdout,"Octet Array size: %d\n", buffer.size());
     UInt16 len= buffer.size();
     swapByteOrder(len);
     sstream.write((const char *)&len,2);
     sstream.write(buffer.c_str(),buffer.size());
     payload = sstream.str();
 
-    for(char chr: payload){
-           fprintf(stdout," %x",chr);
-       }
-   fprintf(stdout,"\n");
-   fflush(stdout);
+//    for(char chr: payload){
+//           fprintf(stdout," %x",chr);
+//       }
+//   fprintf(stdout,"\n");
+//   fflush(stdout);
 
     return 0;
 
@@ -66,27 +66,27 @@ UInt16 Codec::decodeCommand(OctetArray payload, UInt16& channelId, UInt8& cmdCla
 
 
  UInt16 Codec::argumentArray2OctetArray(ArgumentArray& inArgs, OctetArray& payload){
-    fprintf(stdout,"argumentArray2OctetArray inArgs size %d\n", inArgs.size());
+//    fprintf(stdout,"argumentArray2OctetArray inArgs size %d\n", inArgs.size());
     std::stringstream sstream;
     vector<UInt16> inArgsIndexes;
 
     inArgs.getIndexes(inArgsIndexes);
     String result;
     Argument arg;
-    fprintf(stdout,"argumentArray2OctetArray inArgs size %d\n", inArgs.size());
+//    fprintf(stdout,"argumentArray2OctetArray inArgs size %d\n", inArgs.size());
     for (UInt16 index : inArgsIndexes){
         inArgs.getByIndex(index, arg);
-        arg.print();
+//        arg.print();
         arg.write(sstream);
     }
 
     payload = sstream.str();
 
-    for(char chr: payload){
-        fprintf(stdout," %x",chr);
-    }
-   fprintf(stdout,"\n");
-    fflush(stdout);
+//    for(char chr: payload){
+//        fprintf(stdout," %x",chr);
+//    }
+//   fprintf(stdout,"\n");
+//    fflush(stdout);
 
 
     return 0;

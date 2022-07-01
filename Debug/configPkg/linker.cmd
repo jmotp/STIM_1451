@@ -12,7 +12,7 @@
 -l"C:\Users\jmotp\workspace_v11\STIM\Debug\configPkg\package\cfg\empty_pem4f.oem4f"
 -l"C:\ti\tirtos_tivac_2_16_00_08\products\uia_2_00_05_50\packages\ti\uia\sysbios\lib\release\ti.uia.sysbios.aem4f"
 -l"C:\ti\tirtos_tivac_2_16_00_08\products\uia_2_00_05_50\packages\ti\uia\loggers\lib\release\ti.uia.loggers.aem4f"
--l"C:/ti/tirtos_tivac_2_16_00_08/products/tidrivers_tivac_2_16_00_08/packages/ti/drivers/lib/drivers_tivaware_instrumented.aem4f"
+-l"C:/ti/tirtos_tivac_2_16_00_08/products/tidrivers_tivac_2_16_00_08/packages/ti/drivers/lib/drivers_tivaware.aem4f"
 -l"C:\ti\tirtos_tivac_2_16_00_08\products\tidrivers_tivac_2_16_00_08\packages\ti\mw\fatfs\lib\release\ti.mw.fatfs.aem4f"
 -l"C:/ti/tirtos_tivac_2_16_00_08/products/tidrivers_tivac_2_16_00_08/packages/ti/drivers/ports/lib/tirtosport.aem4f"
 -l"C:\Users\jmotp\workspace_v11\STIM\src\sysbios\sysbios.aem4f"

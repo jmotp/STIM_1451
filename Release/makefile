@@ -185,6 +185,7 @@ clean:
 	-$(RM) "EK_TM4C123GXL.obj" "main.obj" "Args\Argument.obj" "Args\ArgumentArray.obj" "Args\TypeCode.obj" "ModuleCommunications\Can.obj" "ModuleCommunications\Comm.obj" "ModuleCommunications\NetComm.obj" "ModuleCommunications\NetReceive.obj" "ModuleCommunications\Receive.obj" "ModuleCommunications\Registration.obj" "TransducerServices\Handler.obj" "Util\Codec.obj" "isotp\isotp.obj" "isotp\isotp_user.obj" 
 	-$(RM) "EK_TM4C123GXL.d" 
 	-$(RM) "main.d" "Args\Argument.d" "Args\ArgumentArray.d" "Args\TypeCode.d" "ModuleCommunications\Can.d" "ModuleCommunications\Comm.d" "ModuleCommunications\NetComm.d" "ModuleCommunications\NetReceive.d" "ModuleCommunications\Receive.d" "ModuleCommunications\Registration.d" "TransducerServices\Handler.d" "Util\Codec.d" "isotp\isotp.d" "isotp\isotp_user.d" 
+	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
 	-@echo 'Finished clean'
 	-@echo ' '
 

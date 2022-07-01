@@ -61,7 +61,11 @@ Can::~Can()
 UInt16 Can::init(){
 
 
-    SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ | SYSCTL_OSC_MAIN);
+
+
+
+    //SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ | SYSCTL_OSC_MAIN);
+    SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
 
     //CAN using pins PE4_RX PE5_TX
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
@@ -111,7 +115,7 @@ void Can::commTask(){
     uint32_t ret;
     while(true){
         //System_printf("Can running\n");
-        System_flush();
+//        System_flush();
         if(g_clrToSend && g_sendFlag){
 //            printf("Message Sent to id %d\n", msgSend.ui32MsgID);
 //            for(int i = 0 ; i < 8;i++){
@@ -160,13 +164,13 @@ void Can::commTask(){
             memcpy((void *)&msgId,receiveBuffer,2);
             swapByteOrder(msgId);
             buffer.msgId = msgId;
-            printf("msgId @Reception %x\n",msgId);
+//            printf("msgId @Reception %x\n",msgId);
 
-            printf("msgId @Reception %x\n",nextCommId);
+//            printf("msgId @Reception %x\n",nextCommId);
 
             CanReceiveArray.insert(std::pair<int,CanMessage>(nextCommId,buffer));
             netReceive->notifyMsg(nextCommId,msgId!=0,buffer.message.size(),0,0,0);
-            printf("msgId @Reception %x\n",msgId);
+//            printf("msgId @Reception %x\n",msgId);
             nextCommId++;
 
 
@@ -184,7 +188,6 @@ UInt16 Can::sendMessage(const uint32_t arbitration_id, const uint8_t* data, cons
     memcpy(msgSendData,data,size * sizeof(char));
     msgSend.ui32MsgID = arbitration_id;
     g_sendFlag=1;
-    Task_yield();
     while(!g_clrToSend);
     return ISOTP_RET_OK;
 }
@@ -235,9 +238,9 @@ UInt16 Can::writeRsp(UInt16 commId, TimeDuration timeout, OctetArray payload,  B
     while(millis-time < timeout.timeRepresentation.Secs*1000){
         UInt16 msgId = CanReceiveArray[commId].msgId;
         CanReceiveArray.erase(CanReceiveArray.find(commId));
-        printf("%x\n",msgId);
+        //printf("%x\n",msgId);
         swapByteOrder(msgId);
-        printf("%x\n",msgId);
+        //printf("%x\n",msgId);
         payload.insert(0,(const char *)&msgId,2);
         //payload.insert(payload.begin(),(char)1);
         //payload.insert(payload.begin(),(char)0);

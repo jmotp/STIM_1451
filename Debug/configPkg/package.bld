@@ -12,7 +12,7 @@ var Executable = xdc.module('xdc.bld.Executable');
 
 var exeOpts = new Executable.Attrs({
         cfgScript: 'C:/Users/jmotp/workspace_v11/STIM/empty.cfg',
-        profile: 'debug',
+        profile: 'release',
         cfgHome: 'configPkg',
 });
 

@@ -25,9 +25,9 @@
     <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROGRAM.Tiva TM4C123GH6PM.ccxml.Stellaris In-Circuit Debug Interface/CORTEX_M4_0" value="${build_artifact:test_test}"/>
     <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.Tiva TM4C123GH6PM.ccxml.Stellaris In-Circuit Debug Interface/CORTEX_M4_0" value="test_test"/>
     <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="C:\Users\jmotp\workspace_v11\blinky\target_config.ccxml"/>
-    <booleanAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_USE_DEFAULT_TARGET_CONFIG" value="true"/>
+    <booleanAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_USE_DEFAULT_TARGET_CONFIG" value="false"/>
     <stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.Tiva TM4C123GH6PM.ccxml.Stellaris In-Circuit Debug Interface/CORTEX_M4_0" value="${build_artifact:test_test}"/>
-    <stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.target_config.ccxml.Stellaris In-Circuit Debug Interface_0/CORTEX_M4_0" value="C:\Users\jmotp\workspace_v11\STIM\Debug\STIM.out"/>
+    <stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.target_config.ccxml.Stellaris In-Circuit Debug Interface_0/CORTEX_M4_0" value="C:\Users\jmotp\workspace_v11\test_test\Debug\test_test.out"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
         <listEntry value="/test_test"/>
     </listAttribute>
