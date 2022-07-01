@@ -142,7 +142,7 @@ int mainTask(void){
         }
 
 
-        Task_yield();
+        //Task_yield();
     }
 
 

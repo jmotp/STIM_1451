@@ -70,6 +70,8 @@ package.mak: C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/bld/ITargetFilt
 C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/bld/package.xs:
 package.mak: C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/bld/package.xs
 package.mak: config.bld
+C:/Users/jmotp/workspace_v11/STIM/Debug/optimizerAssistant/opt_for_speed__4/configPkg/config.bld:
+package.mak: C:/Users/jmotp/workspace_v11/STIM/Debug/optimizerAssistant/opt_for_speed__4/configPkg/config.bld
 C:/ti/tirtos_tivac_2_16_00_08/products/bios_6_45_01_29/packages/ti/targets/ITarget.xs:
 package.mak: C:/ti/tirtos_tivac_2_16_00_08/products/bios_6_45_01_29/packages/ti/targets/ITarget.xs
 C:/ti/tirtos_tivac_2_16_00_08/products/bios_6_45_01_29/packages/ti/targets/C28_large.xs:

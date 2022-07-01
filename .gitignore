@@ -1,4 +1,6 @@
-/.metadata/
+Release/
+src/
 Debug/
 .config/
-a.out
+.settings/
+.launches/

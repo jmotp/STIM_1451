@@ -1,7 +1,7 @@
 /* THIS IS A GENERATED FILE -- DO NOT EDIT */
 
 /* configuro was passed a config.bld file */
-xdc.includeFile("C:/Users/jmotp/workspace_v11/STIM/Debug/configPkg/config.bld");
+xdc.includeFile("C:/Users/jmotp/workspace_v11/STIM/Debug/optimizerAssistant/opt_for_speed__4/configPkg/config.bld");
 var target;    /* the target used for this build */
 
 /* configuro was passed the target's name explicitly */

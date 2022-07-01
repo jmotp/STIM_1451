@@ -178,7 +178,7 @@ void Can::commTask(){
 
 
 
-        Task_yield();
+        //Task_yield();
     }
 }
 
