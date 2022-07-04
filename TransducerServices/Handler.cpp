@@ -22,6 +22,7 @@ Handler::~Handler()
 }
 
 UInt16 Handler::handleCommand(UInt8 cmdClassId,UInt8 cmdFunctionId,ArgumentArray inArgs, Boolean& hasResponse,ArgumentArray& outArgs){
+    extern TransducerChannelManager transducerChannelManager;
     if(cmdClassId == COMMON_CMD){
         if(cmdFunctionId == READ_TEDS_SEGMENT){
             hasResponse = 1;
@@ -38,6 +39,21 @@ UInt16 Handler::handleCommand(UInt8 cmdClassId,UInt8 cmdFunctionId,ArgumentArray
 
 
 
+        }
+    }else if(cmdClassId == XDCR_OPERATE){
+
+        Argument buffer_arg;
+        inArgs.getByIndex(1, buffer_arg);
+        UInt8 channelID = buffer_arg._valueUInt8;
+        const TransducerChannel& transducerChannel = transducerChannelManager.getTransducerChannel(channelID);
+        if(cmdFunctionId == READ_TEDS_SEGMENT){
+            hasResponse=1;
+            Argument arg;
+            transducerChannel.getDataSet(arg);
+            UInt32 offset = 0;
+
+            outArgs.putByIndex(0, Argument(Argument::UInt32_TC,(void*)&offset));
+            outArgs.putByIndex(1, arg);
         }
     }
     return 0;

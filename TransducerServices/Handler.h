@@ -12,12 +12,16 @@
 #include "../Args/ArgumentArray.h"
 #include "../Args/Argument.h"
 #include "CommandCodes.h"
+#include <TransducerServices/TransducerChannelManager.h>
+#include <TransducerServices/TransducerChannel.h>
+
 
 class Handler
 {
 
 private:
     OctetArray TEDS;
+
 public:
 
     Handler();

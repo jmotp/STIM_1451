@@ -76,6 +76,9 @@ public:
 
    // virtual UInt16 registerNetReceive(NetReceive &netReceive);
 
+    enum {SEND_IDLE,SENDING,SENT} sendingCommState = SEND_IDLE, nextSendingCommState = SEND_IDLE;
+    enum {RECEIVE_IDLE,RECEIVING,RECEIVED} receivingCommState = RECEIVE_IDLE, nextReceivingCommState = RECEIVE_IDLE;
+
 
 
 private:

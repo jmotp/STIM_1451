@@ -705,127 +705,127 @@
    <modIdMap id="32770">
       <moduleName>xdc.runtime.Assert</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>Assert.c</cFileName>
    </modIdMap>
    <modIdMap id="32771">
       <moduleName>xdc.runtime.Core</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>null</cFileName>
    </modIdMap>
    <modIdMap id="32772">
       <moduleName>xdc.runtime.Defaults</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>null</cFileName>
    </modIdMap>
    <modIdMap id="32773">
       <moduleName>xdc.runtime.Diags</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>Diags.c</cFileName>
    </modIdMap>
    <modIdMap id="32774">
       <moduleName>xdc.runtime.Error</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>Error.c</cFileName>
    </modIdMap>
    <modIdMap id="32775">
       <moduleName>xdc.runtime.Gate</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>Gate.c</cFileName>
    </modIdMap>
    <modIdMap id="32776">
       <moduleName>xdc.runtime.Log</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>Log.c</cFileName>
    </modIdMap>
    <modIdMap id="32777">
       <moduleName>xdc.runtime.Main</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>null</cFileName>
    </modIdMap>
    <modIdMap id="32778">
       <moduleName>xdc.runtime.Memory</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>Memory.c</cFileName>
    </modIdMap>
    <modIdMap id="32779">
       <moduleName>xdc.runtime.Registry</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>Registry.c</cFileName>
    </modIdMap>
    <modIdMap id="32780">
       <moduleName>xdc.runtime.Startup</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>Startup.c</cFileName>
    </modIdMap>
    <modIdMap id="32781">
       <moduleName>xdc.runtime.System</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>System.c</cFileName>
    </modIdMap>
    <modIdMap id="32782">
       <moduleName>xdc.runtime.SysMin</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>SysMin.c</cFileName>
    </modIdMap>
    <modIdMap id="32783">
       <moduleName>xdc.runtime.Text</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>Text.c</cFileName>
    </modIdMap>
    <modIdMap id="32784">
       <moduleName>xdc.runtime.Timestamp</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>Timestamp.c</cFileName>
    </modIdMap>
    <modIdMap id="32785">
       <moduleName>xdc.runtime.Types</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>null</cFileName>
    </modIdMap>
    <modIdMap id="1">
       <moduleName>xdc.runtime.Main_Module_GateProxy</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>null</cFileName>
    </modIdMap>
    <modIdMap id="2">
       <moduleName>xdc.runtime.Memory_HeapProxy</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>null</cFileName>
    </modIdMap>
    <modIdMap id="3">
       <moduleName>xdc.runtime.System_SupportProxy</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>null</cFileName>
    </modIdMap>
    <modIdMap id="4">
       <moduleName>xdc.runtime.System_Module_GateProxy</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>null</cFileName>
    </modIdMap>
    <modIdMap id="5">
       <moduleName>xdc.runtime.Timestamp_SupportProxy</moduleName>
       <packageVersion>2,1,0,1449624895255</packageVersion>
-      <packageBase>C:/ti/ccs1120/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
+      <packageBase>C:/Users/jmotp/Downloads/xdctools_3_32_00_06_core_win32/xdctools_3_32_00_06_core/packages/xdc/runtime/</packageBase>
       <cFileName>null</cFileName>
    </modIdMap>
    <modIdMap id="32791">

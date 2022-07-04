@@ -23,6 +23,8 @@ void swapByteOrder(uint32_t& ui)
          (ui << 24);
 }
 
+
+
 Argument::Argument()
 {
 
@@ -67,7 +69,9 @@ Argument::Argument(TypeCode _type, void* value_ref){
             new(&this->_valueOctetArray) string(*((string*)value_ref));
             //printf("String pointer %p\n", _valueOctetArray);
 
-            break;
+          break;
+        case UInt32_Array_TC:
+         new(&this->_valueUInt32Array) vector<UInt32>(*(vector<UInt32>*)value_ref);
         }
 
     //this->print();
@@ -98,6 +102,10 @@ Argument& Argument::operator= (const Argument& argument){
 //            System_printf("String Pointer: %d\n", argument._valueOctetArray);
 //            System_flush();
             new(&this->_valueOctetArray) string(argument._valueOctetArray);
+        break;
+        case UInt32_Array_TC:
+         new(&this->_valueUInt32Array) vector<UInt32>(argument._valueUInt32Array);
+            
         }
 
     return *this;
@@ -172,6 +180,17 @@ UInt16 Argument::write(stringstream& ss){
                         ss.write((const char*)&(buffer),sizeof(uint32_t));
                         break;
                     }
+                    case Float32_TC:
+                    {
+                        uint32_t buffer = this->_valueFloat32;
+                        swapByteOrder(buffer);
+                        size=4;
+                        arg_size = 4;
+                        swapByteOrder(arg_size);
+                        ss.write((const char*)(&arg_size),2);
+                        ss.write((const char*)&(buffer),sizeof(uint32_t));
+                        break;
+                    }                    
                     case Octet_Array_TC:
                         size = this->_valueOctetArray.size();
 //                        System_printf("Size: %d\n", size);
@@ -196,6 +215,8 @@ Argument::Argument(const Argument & arg)
         case UInt32_TC: this->_valueUInt32 = arg._valueUInt32;
         break;
         case Octet_Array_TC: new(&this->_valueOctetArray) string(arg._valueOctetArray);
+        break;
+        case UInt32_Array_TC: new(&this->_valueUInt32Array) vector<UInt32>(arg._valueUInt32Array);
         //printf("String pointer %p\n", _valueOctetArray);
      }
     // TODO Auto-generated constructor stub
@@ -211,6 +232,9 @@ Argument::~Argument()
            case Octet_Array_TC:
                //printf("String pointer %p\n", _valueOctetArray);
                _valueOctetArray.~string();
+            break;
+            case UInt32_Array_TC: 
+                _valueUInt32Array.~vector<UInt32>();
         }
     // TODO Auto-generated destructor stub
 };

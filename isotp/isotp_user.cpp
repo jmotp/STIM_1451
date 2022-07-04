@@ -52,7 +52,7 @@ void SysTickbegin(){
 
 /* user implemented, print debug message */
 void isotp_user_debug(const char* message){
-    System_printf("%s",message);
+    System_printf("%s\n",message);
     System_flush();
 };
 
@@ -63,8 +63,6 @@ extern Can can0;
 int  isotp_user_send_can(const uint32_t arbitration_id,
                          const uint8_t* data, const uint8_t size){
 //    System_printf("Message Sent to id %l\n", arbitration_id);
-//    System_flush();
-
     can0.sendMessage(arbitration_id, data, size);
     return ISOTP_RET_OK;
 }

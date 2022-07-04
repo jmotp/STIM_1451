@@ -42,6 +42,22 @@ typedef std::vector<bool> BooleanArray;
 typedef std::vector<TimeInstance> TimeInstanceArray;
 typedef std::vector<TimeDuration> TimeDurationArray;
 
+typedef struct UNITS_t{
+        UInt8 interpretation; 
+        UInt8 radians; 
+        UInt8 steradians; 
+        UInt8 meters; 
+        UInt8 kilograms; 
+        UInt8 seconds; 
+        UInt8 amperes; 
+        UInt8 kelvins; 
+        UInt8 moles; 
+        UInt8 candelas;
+        UInt8 Units;
+}UNITS; 
+
+
+
 
 
 

@@ -9,6 +9,7 @@
 
 #include "ModuleCommunications/Comm.h"
 
+#include "config.h"
 
 #include "isotp_defines.h"
 #include "isotp_config.h"

@@ -477,7 +477,8 @@ void isotp_init_link(IsoTpLink *link, uint32_t sendid, uint8_t *sendbuf, uint16_
 
 void isotp_poll(IsoTpLink *link) {
     int ret;
-
+    //System_printf("%d %d %d\n",link->send_status,link->receive_status,link->send_bs_remain);
+    //System_flush();
     /* only polling when operation in progress */
     if (ISOTP_SEND_STATUS_INPROGRESS == link->send_status) {
 
@@ -508,6 +509,7 @@ void isotp_poll(IsoTpLink *link) {
         if (IsoTpTimeAfter(isotp_user_get_ms(), link->send_timer_bs)) {
             link->send_protocol_result = ISOTP_PROTOCOL_RESULT_TIMEOUT_BS;
             link->send_status = ISOTP_SEND_STATUS_ERROR;
+            isotp_user_debug("Send Timeout\n");
         }
     }
 
@@ -518,6 +520,7 @@ void isotp_poll(IsoTpLink *link) {
         if (IsoTpTimeAfter(isotp_user_get_ms(), link->receive_timer_cr)) {
             link->receive_protocol_result = ISOTP_PROTOCOL_RESULT_TIMEOUT_CR;
             link->receive_status = ISOTP_RECEIVE_STATUS_IDLE;
+            isotp_user_debug("Flow Receive Timeout\n");
         }
     }
 

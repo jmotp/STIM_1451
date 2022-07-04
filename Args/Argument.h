@@ -72,7 +72,7 @@ class Argument{
              Time_Instance_TC, Time_Duration_TC,
              Qos_Params_TC,
              // Arrays of simple types. Note no QOS array
-             UInt8_Array_TC, UInt16_Array_TC, UINT32_Array_TC,
+             UInt8_Array_TC, UInt16_Array_TC, UInt32_Array_TC,
              Float32_Array_TC, Float64_Array_TC, String_Array_TC,
              Octet_Array_TC, Boolean_Array_TC,
             Time_Instance_Array_TC, Time_Duration_Array_TC

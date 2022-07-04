@@ -50,6 +50,8 @@ extern "C"{
 #include <ti/sysbios/knl/Task.h>
 #include <driverlib/EEPROM.h>
 
+#include <TransducerServices/SPITransducerChannel.h>
+#include <TransducerServices/TransducerChannelManager.h>
 
 /* TI-RTOS Header files */
 //#include <ti/drivers/GPIO.h>
@@ -98,7 +100,8 @@ Can can0;
 Codec codec;
 Handler handler;
 NetReceive netReceive;
-
+SPITransducerChannel tchannel;
+TransducerChannelManager transducerChannelManager;
 int mainTask(void){
 
 
@@ -106,15 +109,18 @@ int mainTask(void){
 
 
 
+    transducerChannelManager.registerTransducerChannel(tchannel);
+
+    printf("Beggining...\n");
 
 
-    System_printf("Beggining...\n");
 
     extern uint32_t g_newMessage;
     while(1){
         OctetArray buffer("");
         static uint32_t len;
         static Boolean buf_bool;
+        System_flush();
 
         if(netReceive.messageAvailable()){
             MessageIncomingInfo message = netReceive.getMessageIncomingInfo();
@@ -125,7 +131,7 @@ int mainTask(void){
             UInt8 cmdClassId;
             ArgumentArray inArgs;
             codec.decodeCommand(buffer, channelId, cmdClassId, cmdFunctionId, inArgs);
-            //printf("Command: Channel %d Cmd %d Function %d\n",channelId,cmdClassId,cmdFunctionId);
+            System_printf("Command: Channel %d Cmd %d Function %d\n",channelId,cmdClassId,cmdFunctionId);
             ArgumentArray outArgs;
             Boolean hasResponse =0;
             handler.handleCommand(cmdClassId, cmdFunctionId, inArgs, hasResponse, outArgs);
@@ -167,8 +173,9 @@ void CanTaskWrapper() {
 
 
 void clockHandler1(){
-    //printf("Yielding\n");
-    Task_yield();
+
+
+    //Task_yield();
 }
 
 /*
@@ -181,9 +188,9 @@ Int main()
 
     Clock_Params clockParams;
     Clock_Params_init(&clockParams);
-     clockParams.period = 20;/* every 4 Clock ticks */
+     clockParams.period = 1000;/* every 4 Clock ticks */
      clockParams.startFlag = TRUE;/* start immediately */
-     Clock_Handle myClk0 = Clock_create((Clock_FuncPtr)clockHandler1, 4, &clockParams, &eb);
+     Clock_Handle myClk0 = Clock_create((Clock_FuncPtr)clockHandler1, 2000, &clockParams, &eb);
      if (myClk0 == NULL) {
      System_abort("Clock0 create failed");
      }
@@ -205,10 +212,9 @@ Int main()
     Task_Params_init(&taskParams1);
     taskParams1.stackSize = TASKSTACKSIZE;
     taskParams1.stack = &task1Stack;
-    taskParams1.priority = 1;
+    taskParams1.priority = 2;
 
     Task_construct(&task1Struct, (Task_FuncPtr)CanTaskWrapper, &taskParams1, &eb);
-
 
 
     BIOS_start();
