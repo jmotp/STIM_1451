@@ -19,11 +19,12 @@ TransducerChannelManager::~TransducerChannelManager()
 }
 
 UInt16 TransducerChannelManager::registerTransducerChannel(TransducerChannel& transducerChannel){
-    transducerChannelArray.insert(std::pair<int,TransducerChannel*>(nextChannelId,&transducerChannel));
+    transducerChannelArray.insert(std::pair<int,TransducerChannel*>(nextChannelId++,&transducerChannel));
     return 0;
 }
 
 TransducerChannel * TransducerChannelManager::getTransducerChannel(UInt16 transducerChannelID){
+    System_printf("Returned TransducerChannel\n");
     return transducerChannelArray.at(transducerChannelID);
 }
 

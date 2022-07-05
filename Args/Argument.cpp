@@ -51,12 +51,17 @@ enum TypeCode{
 */
 
 Argument::Argument(TypeCode _type, void* value_ref){
-    type = _type;
-//    \\printf("Created argument of type %d\n", _type);
+    init(_type,value_ref);
+}
 
+void Argument::init(TypeCode _type, void * value_ref){
+    type = _type;
     switch(type){
         case UInt8_TC:
             _valueUInt8 = *(uint8_t *)value_ref;
+            break;
+        case UInt16_TC:
+            _valueUInt16 = *(uint16_t *)value_ref;
             break;
         case UInt32_TC:
             _valueUInt32 = *(uint32_t *)value_ref;
@@ -64,20 +69,11 @@ Argument::Argument(TypeCode _type, void* value_ref){
 
         case Octet_Array_TC:
 
-//            fprintf(stdout,"%s",((string)*(string*)(value_ref)).c_str());
-//            fflush(stdout);
             new(&this->_valueOctetArray) string(*((string*)value_ref));
-            //printf("String pointer %p\n", _valueOctetArray);
-
           break;
         case UInt32_Array_TC:
          new(&this->_valueUInt32Array) vector<UInt32>(*(vector<UInt32>*)value_ref);
         }
-
-    //this->print();
-
-
-
 }
 
 
@@ -116,10 +112,10 @@ UInt16 Argument::print(){
 
     switch(this->type){
             case UInt8_TC:
-               fprintf(stdout,"%u", this->_valueUInt8);
+               fprintf(stdout,"Argument UInt8 %u\n", this->_valueUInt8);
                 break;
             case UInt16_TC:
-                fprintf(stdout,"%u", this->_valueUInt16);
+                fprintf(stdout,"Argument UInt16 %u\n", this->_valueUInt16);
                 break;
             case UInt32_TC:
                 fprintf(stdout,"Argument long %u\n", this->_valueUInt32);
@@ -166,7 +162,10 @@ UInt16 Argument::write(stringstream& ss){
                         uint16_t buffer_ = this->_valueUInt16;
                         swapByteOrder(buffer_);
                         size=2;
-                        ss.write((const char*)&(buffer_),sizeof(uint8_t));
+                        arg_size = 2;
+                        swapByteOrder(arg_size);
+                        ss.write((const char*)(&arg_size),2);
+                        ss.write((const char*)&(buffer_),sizeof(uint16_t));
                         break;
                     }
                     case UInt32_TC:
@@ -205,6 +204,23 @@ UInt16 Argument::write(stringstream& ss){
 
 }
 
+UInt16 Argument::read(stringstream& ss){
+
+    TypeCode type;
+    uint16_t size;
+    void* value;
+    ss.read(( char*)&type,sizeof(TypeCode));
+    ss.read(( char*)&size,sizeof(uint16_t));
+    swapByteOrder(size);
+    fprintf(stdout,"Arg read %d %d\n",type,size);
+    fflush(stdout);
+    value= malloc(size*sizeof(uint8_t));
+    ss.read((char*)value,(size_t)size);
+    init(type,value);
+    return 3+size;
+
+}
+
 
 Argument::Argument(const Argument & arg)
 {
@@ -212,6 +228,8 @@ Argument::Argument(const Argument & arg)
     this->type = arg.type;
 //    \\printf("Copying Argument of type %d\n", type);
     switch(this->type){
+        case UInt16_TC: this->_valueUInt16 = arg._valueUInt16;
+            break;
         case UInt32_TC: this->_valueUInt32 = arg._valueUInt32;
         break;
         case Octet_Array_TC: new(&this->_valueOctetArray) string(arg._valueOctetArray);

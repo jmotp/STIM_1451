@@ -27,7 +27,7 @@ public:
     Handler();
     virtual ~Handler();
 
-    UInt16 handleCommand(UInt8 cmdClassId,UInt8 cmdFunctionId,ArgumentArray inArgs, Boolean& hasResponse,ArgumentArray& outArgs);
+    UInt16 handleCommand(Uint16 channelId,UInt8 cmdClassId,UInt8 cmdFunctionId,ArgumentArray inArgs, Boolean& hasResponse,ArgumentArray& outArgs);
 
 
 };

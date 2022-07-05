@@ -105,6 +105,9 @@ class Argument{
 
        };
 
+    private:
+        void init(TypeCode _type, void * value_ref);
+
     public:
 
 
@@ -116,6 +119,8 @@ class Argument{
         UInt16 toString(String& result);
 
         UInt16 write(stringstream& ss);
+        UInt16 read(stringstream& ss);
+
 
         Argument& operator= (const Argument&);
         Argument(const Argument &);

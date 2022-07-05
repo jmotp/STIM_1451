@@ -56,9 +56,11 @@ UInt16 Codec::decodeCommand(OctetArray payload, UInt16& channelId, UInt8& cmdCla
     cmdFunctionId =payload[3];
 
     UInt16 len = payload[4]*256 + payload[5];
+    System_printf("%x %x %d\n",payload[4],payload[5],len);
 
     if(len>0){
-        octetArray2ArgumentArray(inArgs,payload);
+        System_printf("Here %d\n", payload.size());
+        octetArray2ArgumentArray(inArgs,payload.substr(6));
     }
 
     return 0;
@@ -94,9 +96,28 @@ UInt16 Codec::decodeCommand(OctetArray payload, UInt16& channelId, UInt8& cmdCla
 
  UInt16 Codec::octetArray2ArgumentArray(ArgumentArray& inArgs, OctetArray payload){
     std::stringstream sstream;
-    System_printf("%s\n", payload.c_str());
+    System_printf("Here\n");
+    System_printf("%d\n", payload.size());
+
+    for(char chr: payload){
+        fprintf(stdout," %x",chr);
+    }
+    fprintf(stdout,"\n");
+    fflush(stdout);
+    System_flush();
+    uint16_t size=payload.size();
     sstream<<payload;
-    Argument arg;
+
+    while(size>0){
+        Argument arg;
+        size-= arg.read(sstream);
+        arg.print();
+    }
+
+
+
+
+
 
     return 0;
 }

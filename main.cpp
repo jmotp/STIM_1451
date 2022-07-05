@@ -134,8 +134,7 @@ int mainTask(void){
             System_printf("Command: Channel %d Cmd %d Function %d\n",channelId,cmdClassId,cmdFunctionId);
             ArgumentArray outArgs;
             Boolean hasResponse =0;
-            handler.handleCommand(cmdClassId, cmdFunctionId, inArgs, hasResponse, outArgs);
-
+            handler.handleCommand(channelId, cmdClassId, cmdFunctionId, inArgs, hasResponse, outArgs);
             if(hasResponse){
                 OctetArray payload;
                 Boolean last = 1;

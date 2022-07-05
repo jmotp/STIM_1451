@@ -21,6 +21,7 @@
 
 /* Alloc IsoTpLink statically in RAM */
     static IsoTpLink g_link;
+    static IsoTpLink g_linkBroadcast;
 
     /* Alloc send and receive buffer statically in RAM */
     static uint8_t g_isotpRecvBuf[ISOTP_BUFSIZE];
@@ -96,9 +97,15 @@ private:
     tCANMsgObject msgSend;
     unsigned char msgSendData[8];
 
+    tCANMsgObject msgReceiveBroadcast;
+    unsigned char msgReceiveBroadcastData[8];
+
     unsigned char sendBuffer[512];
     unsigned char receiveBuffer[512];
+    unsigned char receiveBroadcastBuffer[32];
     UInt16 receiveSize;
+    UInt16 receiveBroadcastSize;
+
     UInt32 sendSize;
 
     UInt16 nextCommId=0;
