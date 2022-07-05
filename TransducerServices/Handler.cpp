@@ -45,11 +45,11 @@ UInt16 Handler::handleCommand(UInt8 cmdClassId,UInt8 cmdFunctionId,ArgumentArray
         Argument buffer_arg;
         inArgs.getByIndex(1, buffer_arg);
         UInt8 channelID = buffer_arg._valueUInt8;
-        const TransducerChannel& transducerChannel = transducerChannelManager.getTransducerChannel(channelID);
+        TransducerChannel* transducerChannel = transducerChannelManager.getTransducerChannel(channelID);
         if(cmdFunctionId == READ_TEDS_SEGMENT){
             hasResponse=1;
             Argument arg;
-            transducerChannel.getDataSet(arg);
+            transducerChannel->getDataSet(arg);
             UInt32 offset = 0;
 
             outArgs.putByIndex(0, Argument(Argument::UInt32_TC,(void*)&offset));

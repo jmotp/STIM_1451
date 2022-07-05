@@ -18,13 +18,12 @@ TransducerChannelManager::~TransducerChannelManager()
     // TODO Auto-generated destructor stub
 }
 
-UInt16 TransducerChannelManager::registerTransducerChannel(const TransducerChannel& transducerChannel){
-    const TransducerChannel & transducerChannelRef = transducerChannel;
-    transducerChannelArray.insert(std::pair<int,TransducerChannel>(nextChannelId,transducerChannel));
+UInt16 TransducerChannelManager::registerTransducerChannel(TransducerChannel& transducerChannel){
+    transducerChannelArray.insert(std::pair<int,TransducerChannel*>(nextChannelId,&transducerChannel));
     return 0;
 }
 
-TransducerChannel & TransducerChannelManager::getTransducerChannel(UInt16 transducerChannelID){
+TransducerChannel * TransducerChannelManager::getTransducerChannel(UInt16 transducerChannelID){
     return transducerChannelArray.at(transducerChannelID);
 }
 

@@ -1,6 +1,6 @@
 Release/
 src/
-Debug/
+Debug/*
 .config/
 .settings/
 .launches/
@@ -16,3 +16,7 @@ makefile.defs
 targetConfigs/readme.txt
 targetConfigs/Tiva TM4C123GH6PM.ccxml
 tm4c123gh6pm.cmd
+Debug/main.obj
+Debug/test_test.map
+Debug/test_test_linkInfo.xml
+Debug/Util/Codec.obj

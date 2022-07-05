@@ -93,6 +93,11 @@ UInt16 Codec::decodeCommand(OctetArray payload, UInt16& channelId, UInt8& cmdCla
 }
 
  UInt16 Codec::octetArray2ArgumentArray(ArgumentArray& inArgs, OctetArray payload){
+    std::stringstream sstream;
+    System_printf("%s\n", payload.c_str());
+    sstream<<payload;
+    Argument arg;
+
     return 0;
 }
 

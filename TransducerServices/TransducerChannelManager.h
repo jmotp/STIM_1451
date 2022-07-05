@@ -15,12 +15,12 @@ class TransducerChannelManager
 {
 
 private:
-    std::map<int,TransducerChannel> transducerChannelArray;
+    std::map<int, TransducerChannel*> transducerChannelArray;
     int nextChannelId=1;
 public:
 
     UInt16 registerTransducerChannel(TransducerChannel& transducerChannel);
-    TransducerChannel & getTransducerChannel(UInt16 transducerChannelID);
+    TransducerChannel * getTransducerChannel(UInt16 transducerChannelID);
     TransducerChannelManager();
     virtual ~TransducerChannelManager();
 };
