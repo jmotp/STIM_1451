@@ -7,7 +7,7 @@
 
 #include "TransducerServices/Handler.h"
 #include <memory>
-
+#include <ModuleCommunications/Can.h>
 Handler::Handler()
 {
     vector<unsigned char> vec = {0x00,0x00,0x00,0x24,0x03,0x04,0x00,0x01,0x01,0x01,0x04,0x0a,0x81,0xc0,0xf9,0x74,0x48,0x81,0xf5,0x62,0x2e,0x78,0x0a,0x04,0x3f,0x00,0x00,0x00,0x0c,0x04,0xc0,0xa0,0x00,0x00,0x0d,0x02,0x00,0x01,0xf8,0x82};
@@ -53,7 +53,15 @@ UInt16 Handler::handleCommand(UInt16 channelId,UInt8 cmdClassId,UInt8 cmdFunctio
             outArgs.putByIndex(1, arg);
             System_printf("Handling Here\n");
         }
-    }
+    }else if(cmdClassId == 0x80){
+            if(cmdFunctionId == 0x02){
+                hasResponse=1;
+                extern Can can0;
+                UInt8 canId= can0.getId();
+                outArgs.putByIndex(0, Argument(Argument::UInt8_TC,(void*)&canId));
+                System_printf("Handling Here\n");
+            }
+        }
     return 0;
 }
 

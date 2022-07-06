@@ -20,6 +20,23 @@ Codec::~Codec()
 
 UInt16 Codec::encodeCommand(UInt16 channelId, UInt8 cmdClassId, UInt8 cmdFunctionId, ArgumentArray inArgs, OctetArray& payload){
 
+    std::stringstream sstream;
+    OctetArray buffer;
+    swapByteOrder(channelId);
+    sstream.write((const char *)&channelId,2);
+    sstream.write((const char *)&cmdClassId,1);
+    sstream.write((const char *)&cmdFunctionId,1);
+    argumentArray2OctetArray(inArgs,buffer);
+
+    UInt16 len = buffer.size();
+    fprintf(stdout,"ArgumentArray %d\n",buffer.size());
+
+    swapByteOrder(len);
+    sstream.write((const char *)&len,2);
+    sstream.write(buffer.c_str(),buffer.size());
+    payload = sstream.str();
+
+
     return 0;
 }
 
@@ -35,12 +52,6 @@ UInt16 Codec::encodeResponse(Boolean successFlag,ArgumentArray& outArgs, OctetAr
     sstream.write((const char *)&len,2);
     sstream.write(buffer.c_str(),buffer.size());
     payload = sstream.str();
-
-//    for(char chr: payload){
-//           fprintf(stdout," %x",chr);
-//       }
-//   fprintf(stdout,"\n");
-//   fflush(stdout);
 
     return 0;
 
@@ -65,6 +76,25 @@ UInt16 Codec::decodeCommand(OctetArray payload, UInt16& channelId, UInt8& cmdCla
 
     return 0;
 }
+
+UInt16 Codec::decodeResponse(OctetArray payload, Boolean& successFlag,ArgumentArray& outArgs){
+        for(char chr: payload){
+            fprintf(stdout," %x",chr);
+        }
+       fprintf(stdout,": Response\n");
+        fflush(stdout);
+    successFlag =payload[0];
+
+    UInt16 len = payload[1]*256 + payload[2];
+
+    if(len>0){
+        octetArray2ArgumentArray(outArgs,payload.substr(3));
+    }
+
+    return 0;
+
+}
+
 
 
  UInt16 Codec::argumentArray2OctetArray(ArgumentArray& inArgs, OctetArray& payload){
@@ -94,10 +124,11 @@ UInt16 Codec::decodeCommand(OctetArray payload, UInt16& channelId, UInt8& cmdCla
     return 0;
 }
 
- UInt16 Codec::octetArray2ArgumentArray(ArgumentArray& inArgs, OctetArray payload){
+ UInt16 Codec::octetArray2ArgumentArray(ArgumentArray& outArgs, OctetArray payload){
     std::stringstream sstream;
     System_printf("Here\n");
     System_printf("%d\n", payload.size());
+    UInt8 index=0;
 
     for(char chr: payload){
         fprintf(stdout," %x",chr);
@@ -111,13 +142,8 @@ UInt16 Codec::decodeCommand(OctetArray payload, UInt16& channelId, UInt8& cmdCla
     while(size>0){
         Argument arg;
         size-= arg.read(sstream);
-        arg.print();
+        outArgs.putByIndex(index++, arg);
     }
-
-
-
-
-
 
     return 0;
 }

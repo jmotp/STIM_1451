@@ -25,7 +25,7 @@ ArgumentArray::~ArgumentArray()
 }
 
 ArgumentArray::ArgumentArray(const ArgumentArray& argumentArray){
-    //copy(argumentArray.argumentArray.begin(), argumentArray.argumentArray.end(), back_inserter(this->argumentArray));
+    copy(argumentArray.argumentArray.begin(), argumentArray.argumentArray.end(), back_inserter(this->argumentArray));
 }
 
 uint16_t ArgumentArray::getByName(String name, Argument& argument){

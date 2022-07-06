@@ -30,9 +30,10 @@
 
 typedef struct CanMessage_t{
         UInt16 msgId;
+        UInt16 srcId;
         UInt16 destId;
         OctetArray message;
-  }CanMessage;
+ }CanMessage;
 
 
 class Can : public NetComm
@@ -43,6 +44,9 @@ public:
     virtual ~Can();
     void commTask();
     //static void * commTaskWrapper(void * can_object);
+    UInt16 setId(UInt8 selfId);
+    UInt8 getId(void);
+
     UInt16 init();
     UInt16 shutdown() ;
     UInt16 sleep(TimeDuration duration) ;
@@ -84,21 +88,27 @@ public:
 
 private:
     //NetReceive netReceive;
+    Boolean glinkinit = false;
+
+    UInt16 nextOutmsgId = 0x1001;
 
     //the CAN RECEIVE message Object
     tCANMsgObject msgReceive;
     unsigned char msgReceiveData[8];
     
-    std::queue<CanMessage> CanQueueSend;
-
-    std::map<int, CanMessage> CanReceiveArray;
-
     //the CAN SEND message Object
     tCANMsgObject msgSend;
     unsigned char msgSendData[8];
 
+    //the CAN Broadcast RECEIVE message Object
     tCANMsgObject msgReceiveBroadcast;
     unsigned char msgReceiveBroadcastData[8];
+
+    std::map<int, CanMessage> CanSendArray;
+
+    std::map<int, CanMessage> CanReceiveArray;
+
+    std::map<int, int> pendingResponse;
 
     unsigned char sendBuffer[512];
     unsigned char receiveBuffer[512];
@@ -115,6 +125,7 @@ private:
         SysCtlDelay((50000000 / 3) * (milliseconds / 1000.0f));
     }
 
+    UInt16 addMessage(UInt8 srcId, const char * receiveBuffer, size_t bufferSize);
 
 
 

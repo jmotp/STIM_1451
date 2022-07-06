@@ -74,6 +74,8 @@ void Argument::init(TypeCode _type, void * value_ref){
         case UInt32_Array_TC:
          new(&this->_valueUInt32Array) vector<UInt32>(*(vector<UInt32>*)value_ref);
         }
+    //this->print();
+
 }
 
 
@@ -228,6 +230,8 @@ Argument::Argument(const Argument & arg)
     this->type = arg.type;
 //    \\printf("Copying Argument of type %d\n", type);
     switch(this->type){
+    case UInt8_TC: this->_valueUInt8 = arg._valueUInt8;
+                break;
         case UInt16_TC: this->_valueUInt16 = arg._valueUInt16;
             break;
         case UInt32_TC: this->_valueUInt32 = arg._valueUInt32;

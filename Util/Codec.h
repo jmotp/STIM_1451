@@ -25,6 +25,8 @@ public:
 
     UInt16 encodeResponse(Boolean successFlag,ArgumentArray& outArgs, OctetArray& payload);
 
+    UInt16 decodeResponse(OctetArray payload, Boolean& successFlag,ArgumentArray& outArgs);
+
     UInt16 argumentArray2OctetArray(ArgumentArray& inArgs, OctetArray& payload);
 
     UInt16 octetArray2ArgumentArray(ArgumentArray& inArgs, OctetArray payload);

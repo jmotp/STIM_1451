@@ -25,6 +25,8 @@ extern "C"{
 }
 
 #include "driverlib/systick.h"
+#include "driverlib/timer.h"
+
 
 #include"EK_TM4C123GXL.h"
 
@@ -37,6 +39,8 @@ extern "C"{
 #include "Util/Codec.h"
 #include "driverlib/uart.h"
 #include "utils/uartstdio.h"
+#include "utils/random.h"
+
 
 #include <ti/sysbios/knl/Clock.h>
 
@@ -104,18 +108,56 @@ SPITransducerChannel tchannel;
 TransducerChannelManager transducerChannelManager;
 int mainTask(void){
 
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER5);
+    TimerConfigure(TIMER5_BASE, TIMER_CFG_PERIODIC);
+    TimerEnable(TIMER5_BASE, TIMER_A);
+
+
 
     EK_TM4C123GXL_initGeneral();
-
-
-
+    //can0.setId(0x02);
     transducerChannelManager.registerTransducerChannel(tchannel);
+    ArgumentArray outArgs;
+    UInt32 random= TimerValueGet (TIMER5_BASE,TIMER_A);
 
+    fprintf(stdout,"ArgumentArray %d %d\n",outArgs.size());
+
+    outArgs.putByIndex(0, Argument(Argument::UInt32_TC,&random));
+    fprintf(stdout,"ArgumentArray %d %d\n",outArgs.size());
+
+    OctetArray payload;
+    codec.encodeCommand(00, 0x80, 0x01, outArgs, payload);
+    UInt16 maxPayloadLen;
+    UInt16 commId = 0;
+    can0.open(0x01,true,maxPayloadLen,commId);
+    can0.writeMsg(commId, TimeDuration{1,0}, payload, true, 0x1001);
     printf("Beggining...\n");
 
+    while(1){
+        OctetArray buffer("");
+        static uint32_t len;
+        static Boolean buf_bool;
+        System_flush();
+
+        if(netReceive.responseAvailable()){
+            ResponseIncomingInfo message = netReceive.getResponseIncomingInfo();
+
+            can0.readRsp(message.rcvCommId, TimeDuration{0,0}, message.msgId, len , buffer, buf_bool);
+            Boolean successFlag;
+            ArgumentArray outArgs;
+            codec.decodeResponse(buffer, successFlag, outArgs);
+            Argument arg_id;
+            outArgs.getByIndex(1, arg_id);
+            arg_id.print();
+            System_printf("Id %d\n",arg_id._valueUInt8);
+            can0.setId(arg_id._valueUInt8);
+            break;
 
 
-    extern uint32_t g_newMessage;
+        }
+    }
+
+
     while(1){
         OctetArray buffer("");
         static uint32_t len;
@@ -125,7 +167,6 @@ int mainTask(void){
         if(netReceive.messageAvailable()){
             MessageIncomingInfo message = netReceive.getMessageIncomingInfo();
             can0.readMsg(message.rcvCommId, TimeDuration{0,0},len , buffer, buf_bool);
-            g_newMessage=0;
             UInt16 channelId;
             UInt8 cmdFunctionId;
             UInt8 cmdClassId;
@@ -183,7 +224,6 @@ void clockHandler1(){
 Int main()
 {
     Error_Block eb;
-
 
     Clock_Params clockParams;
     Clock_Params_init(&clockParams);

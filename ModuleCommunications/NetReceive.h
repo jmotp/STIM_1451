@@ -21,6 +21,15 @@ typedef struct messageIncomingInfo{
     UInt16 status;
 } MessageIncomingInfo;
 
+typedef struct responseIncomingInfo{
+    UInt16 rcvCommId;
+    UInt16 msgId;
+    UInt32 payloadLen;
+    UInt32 cacheLen;
+    UInt16 maxPayloadLen;
+    UInt16 status;
+} ResponseIncomingInfo;
+
 class NetReceive: public Receive
 {
 public:
@@ -34,11 +43,16 @@ public:
     UInt16 notifyRsp( UInt16 rcvCommId, UInt16 msgId, UInt32 payloadLen,UInt32 cacheLen, UInt16 maxPayloadLen, UInt16 status);
 
     Boolean messageAvailable();
+    Boolean responseAvailable();
 
     MessageIncomingInfo getMessageIncomingInfo();
+    ResponseIncomingInfo getResponseIncomingInfo();
+
 
     private:
-    std::queue<messageIncomingInfo> messageQueue;
+    std::queue<MessageIncomingInfo> messageQueue;
+    std::queue<ResponseIncomingInfo> responseQueue;
+
 
 };
 
