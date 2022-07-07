@@ -17,7 +17,7 @@
 class TransducerChannel
 {
 private:
-    ArgumentArray TransducerChannelTEDS;
+    OctetArray TransducerChannelTEDS;
 public:
     void TransducerChannelTask();
     OctetArray getTransducerChannelTEDS();

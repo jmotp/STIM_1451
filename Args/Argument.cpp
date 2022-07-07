@@ -157,6 +157,9 @@ UInt16 Argument::write(stringstream& ss){
     ss.write((const char*)&type,sizeof(uint8_t));
     switch(this->type){
                     case UInt8_TC:
+                        arg_size = 1;
+                        swapByteOrder(arg_size);
+                        ss.write((const char*)(&arg_size),2);
                         ss.write((const char*)&(this->_valueUInt8),sizeof(uint8_t));
                         break;
                     case UInt16_TC:
@@ -214,11 +217,21 @@ UInt16 Argument::read(stringstream& ss){
     ss.read(( char*)&type,sizeof(TypeCode));
     ss.read(( char*)&size,sizeof(uint16_t));
     swapByteOrder(size);
-    fprintf(stdout,"Arg read %d %d\n",type,size);
-    fflush(stdout);
+
+    
+//    fprintf(stdout,"Arg read %d %d\n",type,size);
+//    fflush(stdout);
     value= malloc(size*sizeof(uint8_t));
+    
     ss.read((char*)value,(size_t)size);
+    if(size==2){
+        swapByteOrder(*(uint16_t *)value);
+    }else if(size==4){
+        swapByteOrder(*(uint32_t *)value);
+
+    }
     init(type,value);
+    free(value);
     return 3+size;
 
 }

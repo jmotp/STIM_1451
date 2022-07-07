@@ -30,6 +30,12 @@ public:
     UInt16 argumentArray2OctetArray(ArgumentArray& inArgs, OctetArray& payload);
 
     UInt16 octetArray2ArgumentArray(ArgumentArray& inArgs, OctetArray payload);
+    
+    UInt16 TEDS2OctetArray(ArgumentArray& TEDSArray, OctetArray& payload);
+
+    UInt16 octetArray2TEDS(ArgumentArray& TEDSArray, OctetArray payload);
+
+
 
 };
 

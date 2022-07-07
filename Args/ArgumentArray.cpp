@@ -91,6 +91,19 @@ uint16_t ArgumentArray::size(){
     return argumentArray.size();
 }
 
+uint16_t ArgumentArray::writeAsTEDS(stringstream& ss){
+    UInt8 index;
+    vector<tuple<string, Argument>>::iterator argumentArray_ptr = argumentArray.begin();
+    for (argumentArray_ptr = argumentArray.begin(); argumentArray_ptr < argumentArray.end(); argumentArray_ptr++){
+            index = argumentArray_ptr - argumentArray.begin();
+            ss.write((const char *)&index,1);
+            get<1>(*argumentArray_ptr).write(ss);
+    }
+
+
+    return 0;
+}
+
 uint16_t ArgumentArray::write(stringstream& ss){
     for(tuple<string,Argument> arg: argumentArray){
         get<1>(arg).write(ss);

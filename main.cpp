@@ -11,21 +11,22 @@
 
 #include <config.h>
 #define xdc_nolocalstring
-extern "C"{
+
+
 #include <xdc/std.h>
 #include <xdc/runtime/System.h>
 #include "driverlib/can.h"
 #include "driverlib/interrupt.h"
-#include "inc/hw_can.h"
 #include "driverlib/gpio.h"
 #include "driverlib/pin_map.h"
 #include "inc/hw_memmap.h"
 #include "driverlib/sysctl.h"
 #include "inc/hw_ints.h"
-}
+
 
 #include "driverlib/systick.h"
 #include "driverlib/timer.h"
+#include "inc/hw_can.h"
 
 
 #include"EK_TM4C123GXL.h"
@@ -56,6 +57,8 @@ extern "C"{
 
 #include <TransducerServices/SPITransducerChannel.h>
 #include <TransducerServices/TransducerChannelManager.h>
+#include <TransducerServices/TIM.h>
+#define TIMEOUT_REGISTRATION 2000
 
 /* TI-RTOS Header files */
 //#include <ti/drivers/GPIO.h>
@@ -99,107 +102,10 @@ using namespace std;
  * main.c
  */
 
-
+TIM tim;
 Can can0;
-Codec codec;
-Handler handler;
 NetReceive netReceive;
-SPITransducerChannel tchannel;
-TransducerChannelManager transducerChannelManager;
-int mainTask(void){
 
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER5);
-    TimerConfigure(TIMER5_BASE, TIMER_CFG_PERIODIC);
-    TimerEnable(TIMER5_BASE, TIMER_A);
-
-
-
-    EK_TM4C123GXL_initGeneral();
-    //can0.setId(0x02);
-    transducerChannelManager.registerTransducerChannel(tchannel);
-    ArgumentArray outArgs;
-    UInt32 random= TimerValueGet (TIMER5_BASE,TIMER_A);
-
-    fprintf(stdout,"ArgumentArray %d %d\n",outArgs.size());
-
-    outArgs.putByIndex(0, Argument(Argument::UInt32_TC,&random));
-    fprintf(stdout,"ArgumentArray %d %d\n",outArgs.size());
-
-    OctetArray payload;
-    codec.encodeCommand(00, 0x80, 0x01, outArgs, payload);
-    UInt16 maxPayloadLen;
-    UInt16 commId = 0;
-    can0.open(0x01,true,maxPayloadLen,commId);
-    can0.writeMsg(commId, TimeDuration{1,0}, payload, true, 0x1001);
-    printf("Beggining...\n");
-
-    while(1){
-        OctetArray buffer("");
-        static uint32_t len;
-        static Boolean buf_bool;
-        System_flush();
-
-        if(netReceive.responseAvailable()){
-            ResponseIncomingInfo message = netReceive.getResponseIncomingInfo();
-
-            can0.readRsp(message.rcvCommId, TimeDuration{0,0}, message.msgId, len , buffer, buf_bool);
-            Boolean successFlag;
-            ArgumentArray outArgs;
-            codec.decodeResponse(buffer, successFlag, outArgs);
-            Argument arg_id;
-            outArgs.getByIndex(1, arg_id);
-            arg_id.print();
-            System_printf("Id %d\n",arg_id._valueUInt8);
-            can0.setId(arg_id._valueUInt8);
-            break;
-
-
-        }
-    }
-
-
-    while(1){
-        OctetArray buffer("");
-        static uint32_t len;
-        static Boolean buf_bool;
-        System_flush();
-
-        if(netReceive.messageAvailable()){
-            MessageIncomingInfo message = netReceive.getMessageIncomingInfo();
-            can0.readMsg(message.rcvCommId, TimeDuration{0,0},len , buffer, buf_bool);
-            UInt16 channelId;
-            UInt8 cmdFunctionId;
-            UInt8 cmdClassId;
-            ArgumentArray inArgs;
-            codec.decodeCommand(buffer, channelId, cmdClassId, cmdFunctionId, inArgs);
-            System_printf("Command: Channel %d Cmd %d Function %d\n",channelId,cmdClassId,cmdFunctionId);
-            ArgumentArray outArgs;
-            Boolean hasResponse =0;
-            handler.handleCommand(channelId, cmdClassId, cmdFunctionId, inArgs, hasResponse, outArgs);
-            if(hasResponse){
-                OctetArray payload;
-                Boolean last = 1;
-                TimeDuration time{{1,0}};
-                codec.encodeResponse(1, outArgs, payload);
-                can0.writeRsp(message.rcvCommId, time, payload, last);
-            }
-//            System_flush();
-
-        }
-
-
-        //Task_yield();
-    }
-
-
-
-
-
-    //Argument argument_save;
-    //argument.getByIndex(0,argument_save);
-    return 0;
-
-}
 
 Task_Struct task0Struct,task1Struct;
 Char task0Stack[TASKSTACKSIZE],task1Stack[TASKSTACKSIZE];
@@ -209,6 +115,10 @@ Char task0Stack[TASKSTACKSIZE],task1Stack[TASKSTACKSIZE];
 
 void CanTaskWrapper() {
     can0.commTask();
+}
+
+void timTaskWrapper() {
+    tim.task();
 }
 
 
@@ -224,6 +134,11 @@ void clockHandler1(){
 Int main()
 {
     Error_Block eb;
+
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER5);
+    TimerConfigure(TIMER5_BASE, TIMER_CFG_PERIODIC);
+    TimerEnable(TIMER5_BASE, TIMER_A);
+    EK_TM4C123GXL_initGeneral();
 
     Clock_Params clockParams;
     Clock_Params_init(&clockParams);
@@ -242,7 +157,7 @@ Int main()
     taskParams.stackSize = TASKSTACKSIZE;
     taskParams.stack = &task0Stack;
     taskParams.priority = 1;
-    Task_construct(&task0Struct, (Task_FuncPtr)mainTask, &taskParams, &eb);
+    Task_construct(&task0Struct, (Task_FuncPtr)timTaskWrapper, &taskParams, &eb);
 
     can0.init();
 
@@ -251,11 +166,8 @@ Int main()
     Task_Params_init(&taskParams1);
     taskParams1.stackSize = TASKSTACKSIZE;
     taskParams1.stack = &task1Stack;
-    taskParams1.priority = 2;
-
+    taskParams1.priority = 3;
     Task_construct(&task1Struct, (Task_FuncPtr)CanTaskWrapper, &taskParams1, &eb);
-
-
     BIOS_start();
 
     return 0;

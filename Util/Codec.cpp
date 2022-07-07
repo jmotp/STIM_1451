@@ -29,7 +29,7 @@ UInt16 Codec::encodeCommand(UInt16 channelId, UInt8 cmdClassId, UInt8 cmdFunctio
     argumentArray2OctetArray(inArgs,buffer);
 
     UInt16 len = buffer.size();
-    fprintf(stdout,"ArgumentArray %d\n",buffer.size());
+//    fprintf(stdout,"ArgumentArray %d\n",buffer.size());
 
     swapByteOrder(len);
     sstream.write((const char *)&len,2);
@@ -67,10 +67,10 @@ UInt16 Codec::decodeCommand(OctetArray payload, UInt16& channelId, UInt8& cmdCla
     cmdFunctionId =payload[3];
 
     UInt16 len = payload[4]*256 + payload[5];
-    System_printf("%x %x %d\n",payload[4],payload[5],len);
+//    System_printf("%x %x %d\n",payload[4],payload[5],len);
 
     if(len>0){
-        System_printf("Here %d\n", payload.size());
+//        System_printf("Here %d\n", payload.size());
         octetArray2ArgumentArray(inArgs,payload.substr(6));
     }
 
@@ -78,11 +78,11 @@ UInt16 Codec::decodeCommand(OctetArray payload, UInt16& channelId, UInt8& cmdCla
 }
 
 UInt16 Codec::decodeResponse(OctetArray payload, Boolean& successFlag,ArgumentArray& outArgs){
-        for(char chr: payload){
-            fprintf(stdout," %x",chr);
-        }
-       fprintf(stdout,": Response\n");
-        fflush(stdout);
+////        for(char chr: payload){
+//            fprintf(stdout," %x",chr);
+//        }
+//       fprintf(stdout,": Response\n");
+//        fflush(stdout);
     successFlag =payload[0];
 
     UInt16 len = payload[1]*256 + payload[2];
@@ -126,16 +126,16 @@ UInt16 Codec::decodeResponse(OctetArray payload, Boolean& successFlag,ArgumentAr
 
  UInt16 Codec::octetArray2ArgumentArray(ArgumentArray& outArgs, OctetArray payload){
     std::stringstream sstream;
-    System_printf("Here\n");
-    System_printf("%d\n", payload.size());
+//    System_printf("Here\n");
+//    System_printf("%d\n", payload.size());
     UInt8 index=0;
 
-    for(char chr: payload){
-        fprintf(stdout," %x",chr);
-    }
-    fprintf(stdout,"\n");
-    fflush(stdout);
-    System_flush();
+//    for(char chr: payload){
+//        fprintf(stdout," %x",chr);
+//    }
+//    fprintf(stdout,"\n");
+//    fflush(stdout);
+//    System_flush();
     uint16_t size=payload.size();
     sstream<<payload;
 
@@ -148,4 +148,33 @@ UInt16 Codec::decodeResponse(OctetArray payload, Boolean& successFlag,ArgumentAr
     return 0;
 }
 
+ UInt16 Codec::octetArray2TEDS(ArgumentArray& TEDSArray, OctetArray payload){
+    std::stringstream sstream;
+
+    UInt8 index=0;
+
+    uint16_t size=payload.size();
+    sstream<<payload;
+
+    while(size>0){
+        Argument arg;
+        size-= arg.read(sstream);
+        UInt8 TEDScode;
+        sstream.read((char *)&TEDScode, 1);
+        TEDSArray.putByIndex(TEDScode, arg);
+    }
+
+    return 0;
+}
+
+ UInt16 Codec::TEDS2OctetArray(ArgumentArray& TEDSArray, OctetArray& payload){
+//    fprintf(stdout,"argumentArray2OctetArray inArgs size %d\n", inArgs.size());
+    std::stringstream sstream;
+    TEDSArray.writeAsTEDS(sstream);
+    payload = sstream.str();
+
+
+
+    return 0;
+}
 

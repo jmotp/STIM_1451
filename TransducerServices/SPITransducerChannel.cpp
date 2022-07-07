@@ -88,7 +88,7 @@ UInt16 SPITransducerChannel::getDataSet(Argument &dataSet){
 //    System_printf("External %x\n",MAX31855Sensor.thermocouple_temp);
 //    System_printf("Internal %x\n",MAX31855Sensor.internal_temp);
 //    System_printf("Fault %x\n",MAX31855Sensor.therm_fault_details);
-    System_printf("Returned arg %d\n",MAX31855Sensor.thermocouple_temp);
+//    System_printf("Returned arg %d\n",MAX31855Sensor.thermocouple_temp);
 
     dataSet = Argument(Argument::UInt16_TC,(void *)&MAX31855Sensor.thermocouple_temp);
     return 0;

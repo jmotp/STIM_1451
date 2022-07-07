@@ -30,8 +30,8 @@ UInt16 NetReceive::notifyMsg( UInt16 rcvCommId, Boolean twoWay, UInt32 payloadLe
 UInt16 NetReceive::notifyRsp(UInt16 rcvCommId, UInt16 msgId, UInt32 payloadLen,UInt32 cacheLen, UInt16 maxPayloadLen, UInt16 status){
     ResponseIncomingInfo message = {rcvCommId,msgId,payloadLen,cacheLen,maxPayloadLen,status};
     responseQueue.push(message);
-        printf("Added one response\n");
-        printf("Queue size: %d\n", responseQueue.size());
+//        printf("Added one response\n");
+//        printf("Queue size: %d\n", responseQueue.size());
     return 0;
 }
 

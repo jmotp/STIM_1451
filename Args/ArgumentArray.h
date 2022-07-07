@@ -50,6 +50,8 @@ public:
 
     UInt16 write(stringstream& ss);
 
+    UInt16 writeAsTEDS(stringstream& ss);
+
 
 
 };

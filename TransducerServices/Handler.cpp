@@ -58,6 +58,7 @@ UInt16 Handler::handleCommand(UInt16 channelId,UInt8 cmdClassId,UInt8 cmdFunctio
                 hasResponse=1;
                 extern Can can0;
                 UInt8 canId= can0.getId();
+                System_printf("Discovery from NCAP: sending Id %d", canId);
                 outArgs.putByIndex(0, Argument(Argument::UInt8_TC,(void*)&canId));
                 System_printf("Handling Here\n");
             }
