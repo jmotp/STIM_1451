@@ -25,9 +25,15 @@ TIM::~TIM()
 
 UInt16 TIM::handleCommand(UInt16 channelId,UInt8 cmdClassId,UInt8 cmdFunctionId,ArgumentArray inArgs, Boolean& hasResponse,ArgumentArray& outArgs){
     TransducerChannel* transducerChannel = NULL;
-    if(channelId != 0)  transducerChannel = transducerChannelManager.getTransducerChannel(channelId);
+//    System_printf("Channel Id %d\n", channelId);
+
+    if(channelId != 0){
+        transducerChannel = transducerChannelManager.getTransducerChannel(channelId);
+    }
+
     if(cmdClassId == COMMON_CMD){
         if(cmdFunctionId == READ_TEDS_SEGMENT){
+
             Argument TEDSAccessCode_arg;
             inArgs.getByIndex(0,TEDSAccessCode_arg);
             UInt8 TEDSAccessCode = TEDSAccessCode_arg._valueUInt8;
@@ -38,8 +44,13 @@ UInt16 TIM::handleCommand(UInt16 channelId,UInt8 cmdClassId,UInt8 cmdFunctionId,
                     outArgs.putByIndex(1, Argument(Argument::Octet_Array_TC, (void *)&TEDS));
                     break;
                 case 3:
-                    OctetArray TransducerChannelTEDS = transducerChannel->getTransducerChannelTEDS();
-                    outArgs.putByIndex(1, Argument(Argument::Octet_Array_TC, (void *)&TransducerChannelTEDS));
+                    if(channelId == 0 ){
+//                        System_printf("Channel Id == 0\n");
+                        System_flush();
+                    }else{
+                        OctetArray TransducerChannelTEDS = transducerChannel->getTransducerChannelTEDS();
+                        outArgs.putByIndex(1, Argument(Argument::Octet_Array_TC, (void *)&TransducerChannelTEDS));
+                    }
                     break;
 
             }
@@ -51,10 +62,15 @@ UInt16 TIM::handleCommand(UInt16 channelId,UInt8 cmdClassId,UInt8 cmdFunctionId,
         if(cmdFunctionId == READ_TRANSDUCERCHANNEL_DATA){
             hasResponse=1;
             Argument arg;
-            transducerChannel->getDataSet(arg);
-            UInt32 offset = 0;
-            outArgs.putByIndex(0, Argument(Argument::UInt32_TC,(void*)&offset));
-            outArgs.putByIndex(1, arg);
+            if(channelId==0){
+
+            }else{
+                transducerChannel->getDataSet(arg);
+                UInt32 offset = 0;
+                outArgs.putByIndex(0, Argument(Argument::UInt32_TC,(void*)&offset));
+                outArgs.putByIndex(1, arg);
+            }
+
         }
     }else if(cmdClassId == REGISTER_CMD){
             if(cmdFunctionId == DISCOVERY){
@@ -74,18 +90,38 @@ void TIM::task(){
     SPITransducerChannel * tchannel = new SPITransducerChannel();
     transducerChannelManager.registerTransducerChannel(*tchannel);
     ArgumentArray outArgs;
-    UInt32 random= TimerValueGet (TIMER5_BASE,TIMER_A);
+    UInt32 ui32value;
+    ADCSequenceDataGet(ADC0_BASE, 0, &ui32value);
+
+    UInt32 random= (UInt8)ui32value;//TimerValueGet (TIMER5_BASE,TIMER_A);
     outArgs.putByIndex(0, Argument(Argument::UInt32_TC,&random));
     OctetArray payload;
-    codec.encodeCommand(00, 0x80, 0x01, outArgs, payload);
+    codec.encodeHandshakeMessage(0x00, 0x80, 0x01, (UInt8)random, payload);
     UInt16 maxPayloadLen;
     UInt16 commId = 0;
-    can0.open(0x01,true,maxPayloadLen,commId);
+    can0.open(0x00,true,maxPayloadLen,commId);
     Boolean registerProcessFinished = false;
+    fprintf(stdout,"Tim initiated\n");
+    fflush(stdout);
 
+    Argument argforread;
+//    extern uint32_t micros;
+//    UInt32 time=micros;
+//
+//    for(int i=0;i<100;i++){
+//        time=micros;
+//        tchannel->getDataSet(argforread);
+//        time = micros-time;
+//        fprintf(stdout,"%lu\n",time);
+//    }
+//
+//    fflush(stdout);
+
+    int counter = 0;
     while(!registerProcessFinished){
+
         can0.writeMsg(commId, TimeDuration{1,0}, payload, true, 0x1001);
-        printf("Trying Registration\n");
+        System_printf("Trying Registration\n");
         extern UInt32 millis;
         UInt32 time = millis;
         while(1){
@@ -96,22 +132,29 @@ void TIM::task(){
                 ResponseIncomingInfo message = netReceive.getResponseIncomingInfo();
                 can0.readRsp(message.rcvCommId, TimeDuration{0,0}, message.msgId, len , buffer, buf_bool);
                 Boolean successFlag;
-                ArgumentArray outArgs;
-                codec.decodeResponse(buffer, successFlag, outArgs);
-                Argument arg_random;
-                outArgs.getByIndex(0, arg_random);
-                if(random == arg_random._valueUInt32){
-                    Argument arg_id;
-                    outArgs.getByIndex(1, arg_id);
-                    can0.setId(arg_id._valueUInt8);
+                UInt8 random_from_ncap, id;
+                codec.decodeHandshakeResponse(buffer, successFlag, random_from_ncap,id);
+                //printf("Received random from ncap %x %x\n", random, random_from_ncap);
+                if((UInt8)random == random_from_ncap){
+
+                    can0.setId(id);
                     registerProcessFinished = true;
-                    if(netReceive.messageAvailable()){
-                        MessageIncomingInfo message = netReceive.getMessageIncomingInfo();
-                        can0.readMsg(message.rcvCommId, TimeDuration{0,0},len , buffer, buf_bool);
-                    }
+//                    extern uint32_t time_u;
+//                    extern uint32_t micros;
+//                    time_u= micros-time_u;
+//                    fprintf(stdout,"%lu\n",time_u);
+//                    fflush(stdout);
+
+//                    if(netReceive.messageAvailable()){
+//                        MessageIncomingInfo message = netReceive.getMessageIncomingInfo();
+//                        can0.readMsg(message.rcvCommId, TimeDuration{0,0},len , buffer, buf_bool);
+//                    }
+                    break;
+                }else{
+
                 }
                 
-                break;
+
             }
             if(millis - time > TIMEOUT_REGISTRATION){
                 break;
@@ -119,9 +162,8 @@ void TIM::task(){
         }
     }
 
-
+    System_printf("Registering...\n");
     System_printf("Finished Registration -> Listening @ Id %d\n", can0.getId());
-    System_flush();
 
     while(1){
         OctetArray buffer("");
@@ -137,7 +179,7 @@ void TIM::task(){
             UInt8 cmdClassId;
             ArgumentArray inArgs;
             codec.decodeCommand(buffer, channelId, cmdClassId, cmdFunctionId, inArgs);
-            System_printf("Command: Channel %d Cmd %d Function %d\n",channelId,cmdClassId,cmdFunctionId);
+//            System_printf("Command: Channel %d Cmd %d Function %d\n",channelId,cmdClassId,cmdFunctionId);
             ArgumentArray outArgs;
             Boolean hasResponse =0;
             handleCommand(channelId, cmdClassId, cmdFunctionId, inArgs, hasResponse, outArgs);

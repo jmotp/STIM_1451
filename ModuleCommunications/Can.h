@@ -47,6 +47,8 @@ public:
     UInt16 setId(UInt8 selfId);
     UInt8 getId(void);
 
+    void start();
+
     UInt16 init();
     UInt16 shutdown() ;
     UInt16 sleep(TimeDuration duration) ;

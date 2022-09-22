@@ -17,6 +17,9 @@
 #include"EK_TM4C123GXL.h"
 #include "driverlib/timer.h"
 
+#include "driverlib/adc.h"
+#include "inc/hw_adc.h"
+
 
 #include "ModuleCommunications/Comm.h"
 #include "ModuleCommunications/Can.h"
@@ -26,6 +29,7 @@
 
 #include "Util/Codec.h"
 
+enum TIMStatus{TIM_INIT, TIM_SLEEP, TIM_ACTIVE};
 
 
 class TIM
@@ -38,6 +42,7 @@ public:
     void task();
 
 private:
+    TIMStatus timStatus = TIM_INIT;
     OctetArray TEDS;
     Codec codec;
     TransducerChannelManager transducerChannelManager;

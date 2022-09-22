@@ -49,6 +49,8 @@
 
 #include <xdc/runtime/Error.h>
 
+#include "driverlib/adc.h"
+#include "inc/hw_adc.h"
 
 ///* BIOS Header files */
 #include <ti/sysbios/BIOS.h>
@@ -105,7 +107,7 @@ using namespace std;
 TIM tim;
 Can can0;
 NetReceive netReceive;
-
+uint32_t time_u=0;
 
 Task_Struct task0Struct,task1Struct;
 Char task0Stack[TASKSTACKSIZE],task1Stack[TASKSTACKSIZE];
@@ -135,14 +137,29 @@ Int main()
 {
     Error_Block eb;
 
+    uint32_t ui32Value;
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
+
+    while(!SysCtlPeripheralReady(SYSCTL_PERIPH_ADC0));
+    ADCSequenceConfigure(ADC0_BASE, 0, ADC_TRIGGER_PROCESSOR, 0);
+    ADCSequenceStepConfigure(ADC0_BASE, 0, 0,
+    ADC_CTL_IE | ADC_CTL_END | ADC_CTL_CH0);
+    ADCSequenceEnable(ADC0_BASE, 0);
+    ADCProcessorTrigger(ADC0_BASE, 0);
+    while(!ADCIntStatus(ADC0_BASE, 0, false))
+    {
+    }
+
+
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER5);
+    TimerClockSourceSet(TIMER5_BASE, TIMER_CLOCK_PIOSC);
     TimerConfigure(TIMER5_BASE, TIMER_CFG_PERIODIC);
     TimerEnable(TIMER5_BASE, TIMER_A);
     EK_TM4C123GXL_initGeneral();
 
     Clock_Params clockParams;
     Clock_Params_init(&clockParams);
-     clockParams.period = 1000;/* every 4 Clock ticks */
+     clockParams.period = 10;/* every 4 Clock ticks */
      clockParams.startFlag = TRUE;/* start immediately */
      Clock_Handle myClk0 = Clock_create((Clock_FuncPtr)clockHandler1, 2000, &clockParams, &eb);
      if (myClk0 == NULL) {
@@ -167,6 +184,8 @@ Int main()
     taskParams1.stackSize = TASKSTACKSIZE;
     taskParams1.stack = &task1Stack;
     taskParams1.priority = 3;
+
+
     Task_construct(&task1Struct, (Task_FuncPtr)CanTaskWrapper, &taskParams1, &eb);
     BIOS_start();
 

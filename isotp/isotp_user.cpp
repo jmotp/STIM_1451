@@ -32,15 +32,22 @@ extern "C"{
 
 #include <ti/sysbios/knl/Task.h>
 uint32_t millis=0;
+uint32_t micros=0;
 
 void SycTickInt(){
     //System_printf("Here\n");
     //System_flush();
-    millis++; //micros++ if period set to F_CPU/1000000
+    static int count = 0;
+    count++;
+    micros+=1;
+    if(count==1000){
+        count=0;
+        millis++; //micros++ if period set to F_CPU/1000000
+    }
 }
 
 void SysTickbegin(){
-    uint32_t F_CPU = 80000;
+    uint32_t F_CPU = 80;
     SysTickPeriodSet(F_CPU);
     SysTickIntRegister(SycTickInt);
     SysTickIntEnable();

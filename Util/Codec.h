@@ -35,6 +35,12 @@ public:
 
     UInt16 octetArray2TEDS(ArgumentArray& TEDSArray, OctetArray payload);
 
+    UInt16 encodeHandshakeMessage(UInt16 channelId, UInt8 cmdClassId, UInt8 cmdFunctionId, UInt8 random, OctetArray& payload);
+
+    UInt16 decodeHandshakeResponse(OctetArray payload, Boolean& successFlag,UInt8& random, UInt8& Id);
+
+
+
 
 
 };

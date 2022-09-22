@@ -39,3 +39,7 @@ TransducerChannel::~TransducerChannel()
     // TODO Auto-generated destructor stub
 }
 
+TransducerChannelStatus TransducerChannel::getStatus(){
+    return transducerChannelStatus;
+}
+

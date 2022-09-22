@@ -35,10 +35,23 @@ UInt16 Codec::encodeCommand(UInt16 channelId, UInt8 cmdClassId, UInt8 cmdFunctio
     sstream.write((const char *)&len,2);
     sstream.write(buffer.c_str(),buffer.size());
     payload = sstream.str();
+    return 0;
+}
 
+
+UInt16 Codec::encodeHandshakeMessage(UInt16 channelId, UInt8 cmdClassId, UInt8 cmdFunctionId, UInt8 random, OctetArray& payload){
+    std::stringstream sstream;
+    OctetArray buffer;
+    swapByteOrder(channelId);
+    sstream.write((const char *)&channelId,2);
+    sstream.write((const char *)&cmdClassId,1);
+    sstream.write((const char *)&cmdFunctionId,1);
+    sstream.write((const char *)&random,1);
+    payload = sstream.str();
 
     return 0;
 }
+
 
 
 UInt16 Codec::encodeResponse(Boolean successFlag,ArgumentArray& outArgs, OctetArray& payload){
@@ -66,8 +79,17 @@ UInt16 Codec::decodeCommand(OctetArray payload, UInt16& channelId, UInt8& cmdCla
     cmdClassId =payload[2];
     cmdFunctionId =payload[3];
 
-    UInt16 len = payload[4]*256 + payload[5];
+    UInt16 len = 0;
+    if(payload.size()<=4){
+        len = 0;
+    }
+    else{
+        len = payload[4]*256 + payload[5];
+
+    }
 //    System_printf("%x %x %d\n",payload[4],payload[5],len);
+
+
 
     if(len>0){
 //        System_printf("Here %d\n", payload.size());
@@ -95,7 +117,14 @@ UInt16 Codec::decodeResponse(OctetArray payload, Boolean& successFlag,ArgumentAr
 
 }
 
+UInt16 Codec::decodeHandshakeResponse(OctetArray payload, Boolean& successFlag,UInt8& random, UInt8& Id){
+    successFlag =payload[0];
 
+    random = payload[1];
+    Id = payload[2];
+
+    return 0;
+}
 
  UInt16 Codec::argumentArray2OctetArray(ArgumentArray& inArgs, OctetArray& payload){
 //    fprintf(stdout,"argumentArray2OctetArray inArgs size %d\n", inArgs.size());

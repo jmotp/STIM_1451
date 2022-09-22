@@ -24,7 +24,7 @@ UInt16 TransducerChannelManager::registerTransducerChannel(TransducerChannel& tr
 }
 
 TransducerChannel * TransducerChannelManager::getTransducerChannel(UInt16 transducerChannelID){
-    System_printf("Returned TransducerChannel\n");
+//    System_printf("Returned TransducerChannel\n");
     return transducerChannelArray.at(transducerChannelID);
 }
 

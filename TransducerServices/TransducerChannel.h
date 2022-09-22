@@ -13,14 +13,18 @@
 #include <Args/ArgumentArray.h>
 #include <Util/Codec.h>
 
+enum TransducerChannelStatus{TC_INIT, TC_IDLE, TC_OPERATE};
 
 class TransducerChannel
 {
 private:
+    TransducerChannelStatus transducerChannelStatus = TC_INIT; 
     OctetArray TransducerChannelTEDS;
 public:
     void TransducerChannelTask();
     OctetArray getTransducerChannelTEDS();
+
+    TransducerChannelStatus getStatus();
     UInt16 setTransducerChannelTEDS(OctetArray TEDS);
      virtual UInt16 getDataSet(Argument &dataSet)=0;
     TransducerChannel();
